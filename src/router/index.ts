@@ -1,9 +1,12 @@
 import BoardRoutes from '@/board/router/BoardRoutes'
+import HomeRoutes from '@/home/router/homeRoutes'
+import NaverAuthenticationRoutes from '@/naverAuthentication/router/AuthenticationRouter'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
-  // 항상 도메인의 router 추가했으면 main router 에도 추가해줘야함
+  ...HomeRoutes,
   ...BoardRoutes,
+  ...NaverAuthenticationRoutes,
 ]
 
 const router = createRouter({
