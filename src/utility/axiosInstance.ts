@@ -1,4 +1,4 @@
-import env from "@/env";
+import env from "@/env"
 import axios, { AxiosInstance } from "axios";
 
 const djangoAxiosInst: AxiosInstance = axios.create({
