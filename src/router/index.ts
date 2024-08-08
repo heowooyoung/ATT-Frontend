@@ -1,20 +1,20 @@
+import BoardRoutes from '@/board/router/BoardRoutes'
+import HomeRoutes from '@/home/router/homeRoutes'
+// import NaverAuthenticationRoutes from '@/naverAuthentication/router/AuthenticationRouter'
+import GoogleAuthenticationRoutes from '@/googleAuthentication/router/GoogleAuthenticationRoutes'
+
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import AccountRoutes from '@/account/router/AccountRoutes'
+import KakaoAuthenticationRoutes from '@/kakaoAuthentication/router/KakaoAuthenticationRoutes'
+
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+  ...HomeRoutes,
+  ...BoardRoutes,
+  ...AccountRoutes,
+  // ...NaverAuthenticationRoutes,
+  ...GoogleAuthenticationRoutes,
+  ...KakaoAuthenticationRoutes,
 ]
 
 const router = createRouter({
