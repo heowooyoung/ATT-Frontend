@@ -78,12 +78,14 @@ export default {
         }
     },
     methods: {
-        ...mapActions(googleAuthenticationModule, ['requestUserInfoToDjango']),
+        ...mapActions(googleAuthenticationModule, ['requestGoogleUserInfoToDjango']),
+
+
         ...mapActions(accountModule, ['requestNicknameDuplicationCheckToDjango', 'requestCreateNewAccountToDjango']),
 
         async requestUserInfo () {
             try {
-                const googleUserInfo = await this.requestUserInfoToDjango()
+                const googleUserInfo = await this.requestGoogleUserInfoToDjango()
                 this.email = googleUserInfo.email
             } catch (error) {
                 console.error('에러:', error)

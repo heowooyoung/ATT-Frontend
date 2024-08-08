@@ -6,7 +6,7 @@ import axiosInst from "@/utility/axiosInstance"
 export type GoogleAuthenticationActions = {
     requestGoogleOauthRedirectionToDjango(): Promise<void>
     requestAccessTokenToDjangoRedirection(context: ActionContext<GoogleAuthenticationState, any>, payload: { code: string }): Promise<void>
-    requestUserInfoToDjango(context: ActionContext<GoogleAuthenticationState, any>): Promise<any>
+    requestGoogleUserInfoToDjango(context: ActionContext<GoogleAuthenticationState, any>): Promise<any>
 }
 
 const actions: GoogleAuthenticationActions = {
@@ -29,7 +29,7 @@ const actions: GoogleAuthenticationActions = {
             throw error
         }
     },
-    async requestUserInfoToDjango(
+    async requestGoogleUserInfoToDjango(
         context: ActionContext<GoogleAuthenticationState, any>): Promise<any> {
         try {
             const accessToken = localStorage.getItem("accessToken")
