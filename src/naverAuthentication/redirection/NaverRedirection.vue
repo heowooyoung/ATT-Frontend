@@ -5,22 +5,20 @@
 <script>
 import { mapActions } from 'vuex';
 
-const kakaoAuthenticationModule = 'kakaoAuthenticationModule'
+const authenticationModule = 'naverAuthenticationModule'
 const accountModule = 'accountModule'
 
 export default {
     methods: {
-        ...mapActions(kakaoAuthenticationModule, [
+        ...mapActions(authenticationModule, [
             'requestAccessTokenToDjangoRedirection',
         ]),
-
         async setRedirectData () {
             const code = this.$route.query.code
-
             await this.requestAccessTokenToDjangoRedirection({ code })
         },
     },
-
+    
     async created () {
             await this.setRedirectData()
         }

@@ -1,6 +1,6 @@
 import BoardRoutes from '@/board/router/BoardRoutes'
 import HomeRoutes from '@/home/router/homeRoutes'
-// import NaverAuthenticationRoutes from '@/naverAuthentication/router/AuthenticationRouter'
+import NaverAuthenticationRoutes from '@/naverAuthentication/router/NaverAuthenticationRoutes'
 import GoogleAuthenticationRoutes from '@/googleAuthentication/router/GoogleAuthenticationRoutes'
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
   ...HomeRoutes,
   ...BoardRoutes,
   ...AccountRoutes,
-  // ...NaverAuthenticationRoutes,
+  ...NaverAuthenticationRoutes,
   ...GoogleAuthenticationRoutes,
   ...KakaoAuthenticationRoutes,
 ]

@@ -1,23 +1,23 @@
 import { ActionContext } from "vuex"
-import { KakaoAuthenticationState } from "./states"
+import { NaverAuthenticationState } from "./states"
 import { AxiosResponse } from "axios"
 import axiosInst from "@/utility/axiosInstance"
 
-export type KakaoAuthenticationActions = {
-    requestKakaoOauthRedirectionToDjango(): Promise<void>
-    requestAccessTokenToDjangoRedirection(context: ActionContext<KakaoAuthenticationState, any>, payload: { code: string }): Promise<void>
+export type AuthenticationActions = {
+    requestNaverOauthRedirectionToDjango(): Promise<void>
+    requestAccessTokenToDjangoRedirection(context: ActionContext<NaverAuthenticationState, any>, payload: { code: string }): Promise<void>
 }
 
-const actions: KakaoAuthenticationActions = {
-    async requestKakaoOauthRedirectionToDjango(): Promise<void> {
-        console.log('requestKakaoOauthRedirectionToDjango()')
-        return axiosInst.djangoAxiosInst.get('/kakao_oauth/kakao').then((res) => {
+const actions: AuthenticationActions = {
+    async requestNaverOauthRedirectionToDjango(): Promise<void> {
+        console.log('requestNaverOauthRedirectionToDjango()')
+        return axiosInst.djangoAxiosInst.get('/naver_oauth/naver').then((res) => {
             console.log('url:', res.data.url)
             window.location.href = res.data.url
         })
     },
     async requestAccessTokenToDjangoRedirection(
-        context: ActionContext<KakaoAuthenticationState, any>,
+        context: ActionContext<NaverAuthenticationState, any>,
         payload: { code: string }): Promise<void> {
 
         try {
@@ -25,7 +25,7 @@ const actions: KakaoAuthenticationActions = {
             const { code } = payload
 
             const response = await axiosInst.djangoAxiosInst.post(
-                '/kakao_oauth/kakao/access-token', { code })
+                '/naver_oauth/naver/access-token', { code })
             localStorage.setItem("accessToken", response.data.accessToken.access_token)
         } catch (error) {
             console.log('Access Token 요청 중 문제 발생:', error)

@@ -1,12 +1,12 @@
-import actions, { AuthenticationActions } from "./actions"
-import mutations, { AuthenticationMutations } from "./mutations"
-import state, { AuthenticationState } from "./states"
+import actions, { KakaoAuthenticationActions } from "./actions"
+import mutations, { KakaoAuthenticationMutations } from "./mutations"
+import state, { KakaoAuthenticationState } from "./states"
 
 export interface KakaoAuthenticationModule {
     namespaced: true
-    state: AuthenticationState
-    actions: AuthenticationActions
-    mutations: AuthenticationMutations
+    state: KakaoAuthenticationState
+    actions: KakaoAuthenticationActions
+    mutations: KakaoAuthenticationMutations
 }
 
 const kakaoAuthenticationModule: KakaoAuthenticationModule = {

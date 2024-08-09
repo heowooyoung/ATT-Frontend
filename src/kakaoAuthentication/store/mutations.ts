@@ -1,15 +1,15 @@
 import { MutationTree } from "vuex";
-import { AuthenticationState} from "./states";
+import { KakaoAuthenticationState} from "./states";
 import { REQEUST_IS_AUTEHNTICATED_TO_DJANGO } from "./mutation-types";
 
-export interface AuthenticationMutations extends MutationTree<AuthenticationState>{
-    [REQEUST_IS_AUTEHNTICATED_TO_DJANGO] (state: AuthenticationState, settingValue: boolean): void
+export interface KakaoAuthenticationMutations extends MutationTree<KakaoAuthenticationState>{
+    [REQEUST_IS_AUTEHNTICATED_TO_DJANGO] (state: KakaoAuthenticationState, settingValue: boolean): void
 }
 
-const mutations: MutationTree<AuthenticationState> = {
-    [REQEUST_IS_AUTEHNTICATED_TO_DJANGO] (state: AuthenticationState, settingValue: boolean): void{
+const mutations: MutationTree<KakaoAuthenticationState> = {
+    [REQEUST_IS_AUTEHNTICATED_TO_DJANGO] (state: KakaoAuthenticationState, settingValue: boolean): void{
         state.isAuthenticated = settingValue
     }
 }
 
-export default mutations as AuthenticationMutations
+export default mutations as KakaoAuthenticationMutations

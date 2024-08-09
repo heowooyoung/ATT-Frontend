@@ -16,9 +16,7 @@ const actions: GoogleAuthenticationActions = {
         })
     },
     async requestAccessTokenToDjangoRedirection(
-        context: ActionContext<GoogleAuthenticationState, any>,
-        payload: { code: string }): Promise<void> {
-
+        context: ActionContext<GoogleAuthenticationState, any>, payload: { code: string }): Promise<void> {
         try {
             console.log('requestAccessTokenToDjangoRedirection()')
             const { code } = payload
@@ -35,11 +33,11 @@ const actions: GoogleAuthenticationActions = {
         context: ActionContext<GoogleAuthenticationState, any>): Promise<any> {
         try {
             const accessToken = localStorage.getItem("accessToken")
-            const userInfoResponse: AxiosResponse<any> = 
+            const userInfoResponse: AxiosResponse<any> =
                 await axiosInst.djangoAxiosInst.post('/google_oauth/google/user-info', { access_token: accessToken })
 
             const userInfo = userInfoResponse.data.user_info
-            
+
             return userInfo
         } catch (error) {
             alert('사용자 정보 가져오기 실패!')
