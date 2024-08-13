@@ -84,7 +84,7 @@ export default {
         async requestUserInfo () {
             try {
                 const naverUserInfo = await this.requestNaverUserInfoToDjango()
-                this.email = naverUserInfo.email
+                this.email = naverUserInfo.response.email
             } catch (error) {
                 console.error('에러:', error)
                 alert('사용자 정보를 가져오는데 실패하였습니다!')
