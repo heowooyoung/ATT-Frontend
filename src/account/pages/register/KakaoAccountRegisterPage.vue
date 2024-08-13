@@ -84,7 +84,7 @@ export default {
         async requestUserInfo () {
             try {
                 const kakaoUserInfo = await this.requestKakaoUserInfoToDjango()
-                this.email = kakaoUserInfo.email
+                this.email = kakaoUserInfo.kakao_account.email
             } catch (error) {
                 console.error('에러:', error)
                 alert('사용자 정보를 가져오는데 실패하였습니다!')
