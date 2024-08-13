@@ -18,9 +18,9 @@ export default {
             await this.requestAccessTokenToDjangoRedirection({ code })
 
             const userInfo = await this.requestKakaoUserInfoToDjango()
-            const email = userInfo.email
+            const email = userInfo.kakao_account.email
             console.log('userInfo:', userInfo)
-            console.log('email:', userInfo.email)
+            console.log('email:', email)
         },
     },
 
