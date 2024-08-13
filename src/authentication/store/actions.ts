@@ -14,7 +14,7 @@ const actions: AuthenticationActions = {
         { email, accessToken }: { email: string, accessToken: string }): Promise<any> {
         try {
             const response: AxiosResponse<any> = await axiosInst.djangoAxiosInst.post(
-                '/oauth/redis-access-token/', {
+                '/redis_token/redis-access-token', {
                 email: email,
                 accessToken: accessToken
             });
