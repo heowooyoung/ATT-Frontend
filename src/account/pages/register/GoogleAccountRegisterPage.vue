@@ -79,8 +79,6 @@ export default {
     },
     methods: {
         ...mapActions(googleAuthenticationModule, ['requestGoogleUserInfoToDjango']),
-
-
         ...mapActions(accountModule, ['requestNicknameDuplicationCheckToDjango', 'requestCreateNewAccountToDjango']),
 
         async requestUserInfo () {

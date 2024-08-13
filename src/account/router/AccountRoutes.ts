@@ -1,5 +1,7 @@
 import AccountLoginPage from "@/account/pages/login/AccountLoginPage.vue"
-import AccountRegisterPage from "@/account/pages/register/AccountRegisterPage.vue"
+import GoogleAccountRegisterPage from "@/account/pages/register/GoogleAccountRegisterPage.vue"
+import KakaoAccountRegisterPage from "@/account/pages/register/KakaoAccountRegisterPage.vue"
+import NaverAccountRegisterPage from "@/account/pages/register/NaverAccountRegisterPage.vue"
 
 const AccountRoutes = [
     {
@@ -8,9 +10,19 @@ const AccountRoutes = [
         component: AccountLoginPage
     },
     {
-        path: '/account/register',
-        name: 'AccountRegisterPage',
-        component: AccountRegisterPage
+        path: '/account/google-register',
+        name: 'GoogleAccountRegisterPage',
+        component: GoogleAccountRegisterPage
+    },
+    {
+        path: '/account/kakao-register',
+        name: 'KakaoAccountRegisterPage',
+        component: KakaoAccountRegisterPage
+    },
+    {
+        path: '/account/naver-register',
+        name: 'NaverAccountRegisterPage',
+        component: NaverAccountRegisterPage
     },
 ]
 

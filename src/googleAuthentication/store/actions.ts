@@ -43,7 +43,7 @@ const actions: GoogleAuthenticationActions = {
             alert('사용자 정보 가져오기 실패!')
             throw error
         }
-    }
+    },
 }
 
 export default actions;
