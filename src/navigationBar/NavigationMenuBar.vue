@@ -73,9 +73,9 @@
     mounted() {
       console.log("navigation bar mounted()")
       const userToken = localStorage.getItem("userToken")
-      console.log("You already has a userToken!")
       if (userToken)
       {
+        console.log("You already has a userToken!")
         this.$store.state.authenticationModule.isAuthenticated = true
       }
     },
