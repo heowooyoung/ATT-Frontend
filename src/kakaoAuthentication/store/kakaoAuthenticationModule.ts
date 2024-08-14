@@ -1,19 +1,17 @@
-import actions, { AuthenticationActions } from "./actions"
-import mutations, { AuthenticationMutations } from "./mutations"
-import state, { AuthenticationState } from "./states"
+import actions, { KakaoAuthenticationActions } from "./actions"
+import state, { AuthenticationState } from "@/authentication/store/states"
+
 
 export interface KakaoAuthenticationModule {
     namespaced: true
     state: AuthenticationState
-    actions: AuthenticationActions
-    mutations: AuthenticationMutations
+    actions: KakaoAuthenticationActions
 }
 
 const kakaoAuthenticationModule: KakaoAuthenticationModule = {
     namespaced: true,
     state,
     actions,
-    mutations,
 }
 
 export default kakaoAuthenticationModule

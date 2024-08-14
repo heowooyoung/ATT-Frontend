@@ -2,7 +2,7 @@ import KakaoRedirection  from "../redirection/KakaoRedirection.vue";
 
 const KakaoAuthenticationRoutes = [
     {
-        path: '/kakaoOauth/kakao-access-token',
+        path: '/kakao_oauth/kakao-access-token',
         name: 'KakaoRedirecton',
         component: KakaoRedirection
     },

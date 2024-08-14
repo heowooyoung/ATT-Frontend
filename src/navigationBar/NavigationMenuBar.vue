@@ -1,76 +1,115 @@
 <template>
-    <v-app-bar color="orange" app dark height="64">
-        <v-btn @click="goToHome">
-            <v-toolbar-title class="text-uppercase text--darken-4">
-                <span>ATT Project</span>
-            </v-toolbar-title>
+    <v-app-bar color="yellow" app dark height="48">
+      <v-toolbar-title>
+        <v-btn text @click="goToHome" class="navbar-title-btn">
+          <span> IF </span>
         </v-btn>
-        <v-spacer></v-spacer>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
 
-        <v-btn text @click="goToBoardList" class="btn-text">
-            <v-icon left>mdi-forum</v-icon>
-            <span>게시판</span>
-        </v-btn>
-        <v-btn v-if="!isAuthenticated" text @click="signIn" class="btn-text">
-            <v-icon left>mdi-login</v-icon>
-            <span>로그인</span>
-        </v-btn>
-        <v-btn v-if="isAuthenticated" text @click="signOut" class="btn-text">
-            <v-icon left>mdi-logout</v-icon>
-            <span>로그아웃</span>
-        </v-btn>
+      <v-btn v-if="!isAuthenticated" text @click="signIn" class="btn-text">
+        <v-icon left>mdi-login</v-icon>
+        <span>LOGIN</span>
+      </v-btn>
+  
+      <v-menu v-if="isAuthenticated" close-on-content-click>
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" class="btn-text" style="margin-right: 16px">
+            <b>My Page</b>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in myPageItems"
+            :key="index"
+            @click="item.action">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
-</template>
-
-<script>
-import '@mdi/font/css/materialdesignicons.css'
-import router from '@/router'
-import { mapActions, mapState } from 'vuex'
-
-const naverAuthenticationModule = 'naverAuthenticationModule'
-
-export default {
-    data () {
-        return {
-        }
+  </template>
+  
+  <script scoped>
+  import "@mdi/font/css/materialdesignicons.css";
+  import router from "@/router";
+  import { mapActions, mapState } from "vuex";
+  const authenticationModule = "authenticationModule";
+  
+  export default {
+    data() {
+      return {
+        myPageItems: [
+          {
+            title: "MY PAGE",
+            action: () => {this.goToMyPage();},
+          },
+          {
+            title: "LOGOUT",
+            action: () => {this.signOut()},
+          },
+        ],
+      };
     },
     computed: {
-        ...mapState(naverAuthenticationModule, ['isAuthenticated'])
+      ...mapState(authenticationModule, ["isAuthenticated"]),
     },
     methods: {
-        ...mapActions(naverAuthenticationModule, ['requestLogoutToDjango']),
-        goToHome () {
-            router.push('/')
-        },
-        goToBoardList () {
-            router.push('/board/list')
-        },
-        signIn () {
-            router.push('/account/login')
-        },
-        signOut () {
-            this.requestLogoutToDjango()
-            router.push('/')
-        },
-
+      ...mapActions(authenticationModule, ["requestLogoutToDjango"]),
+      goToHome() {
+        router.push("/")
+      },
+      signIn() {
+        router.push("/account/login")
+      },
+      signOut() {
+        this.requestLogoutToDjango()
+        router.push("/")
+      },
+      goToMyPage() {
+        router.push("/account/mypage")
+      },
     },
-    mounted () {
-        console.log('navigation bar mounted()')
-        
-        // const userToken = localStorage.getItem("userToken")
-
-        // if (userToken) {
-        //     console.log('You already have a userToken!!!')
-        //     this.$store.state.authenticationModule.isAuthenticated = true
-        // }
+    mounted() {
+      console.log("navigation bar mounted()")
+      const userToken = localStorage.getItem("userToken")
+      console.log("You already has a userToken!")
+      if (userToken)
+      {
+        this.$store.state.authenticationModule.isAuthenticated = true
+      }
     },
-}
-</script>
-
-<style scoped>
-.status-indicator {
-    margin-left: 5px;
+  };
+  </script>
+  
+  <style scoped>
+  .navbar-title-btn {
+    color: black;
+    font-size: 24px;
     font-weight: bold;
-    color: red;
-}
-</style>
+  }
+  
+  .mdi-icon {
+    color: black;
+    font-size: 36px;
+    margin-right: 8px;
+  }
+  
+  .btn-text {
+    font-size: 18px;
+    margin-right: 16px;
+    color: black;
+  }
+  
+  .v-btn {
+    text-transform: uppercase;
+  }
+  
+  .v-btn:hover .btn-text {
+    color: white;
+  }
+  
+  .v-btn:focus .btn-text {
+    color: white;
+  }
+  </style>
