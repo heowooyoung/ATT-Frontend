@@ -1,12 +1,12 @@
 import { ActionContext } from "vuex"
-import { NaverAuthenticationState } from "./states"
+import { AuthenticationState } from "@/authentication/store/states"
 import { AxiosResponse } from "axios"
 import axiosInst from "@/utility/axiosInstance"
 
 export type AuthenticationActions = {
     requestNaverOauthRedirectionToDjango(): Promise<void>
-    requestAccessTokenToDjangoRedirection(context: ActionContext<NaverAuthenticationState, any>, payload: { code: string }): Promise<void>
-    requestNaverUserInfoToDjango(context: ActionContext<NaverAuthenticationState, any>): Promise<any>
+    requestAccessTokenToDjangoRedirection(context: ActionContext<AuthenticationState, any>, payload: { code: string }): Promise<void>
+    requestNaverUserInfoToDjango(context: ActionContext<AuthenticationState, any>): Promise<any>
 }
 
 const actions: AuthenticationActions = {
@@ -18,7 +18,7 @@ const actions: AuthenticationActions = {
         })
     },
     async requestAccessTokenToDjangoRedirection(
-        context: ActionContext<NaverAuthenticationState, any>,
+        context: ActionContext<AuthenticationState, any>,
         payload: { code: string }): Promise<void> {
 
         try {
@@ -34,7 +34,7 @@ const actions: AuthenticationActions = {
         }
     },
     async requestNaverUserInfoToDjango(
-        context: ActionContext<NaverAuthenticationState, any>): Promise<any> {
+        context: ActionContext<AuthenticationState, any>): Promise<any> {
         try {
             const accessToken = localStorage.getItem("accessToken")
             const userInfoResponse: AxiosResponse<any> =
