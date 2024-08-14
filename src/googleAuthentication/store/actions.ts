@@ -1,12 +1,12 @@
 import { ActionContext } from "vuex"
-import { GoogleAuthenticationState } from "./states"
+import { AuthenticationState } from "@/authentication/store/states"
 import { AxiosResponse } from "axios"
 import axiosInst from "@/utility/axiosInstance"
 
 export type GoogleAuthenticationActions = {
     requestGoogleOauthRedirectionToDjango(): Promise<void>
-    requestAccessTokenToDjangoRedirection(context: ActionContext<GoogleAuthenticationState, any>, payload: { code: string }): Promise<void>
-    requestUserInfoToDjango(context: ActionContext<GoogleAuthenticationState, any>): Promise<any>
+    requestAccessTokenToDjangoRedirection(context: ActionContext<AuthenticationState, any>, payload: { code: string }): Promise<void>
+    requestGoogleUserInfoToDjango(context: ActionContext<AuthenticationState, any>): Promise<any>
 }
 
 const actions: GoogleAuthenticationActions = {
@@ -16,7 +16,7 @@ const actions: GoogleAuthenticationActions = {
         })
     },
     async requestAccessTokenToDjangoRedirection(
-        context: ActionContext<GoogleAuthenticationState, any>, payload: { code: string }): Promise<void> {
+        context: ActionContext<AuthenticationState, any>, payload: { code: string }): Promise<void> {
         try {
             console.log('requestAccessTokenToDjangoRedirection()')
             const { code } = payload
@@ -29,8 +29,8 @@ const actions: GoogleAuthenticationActions = {
             throw error
         }
     },
-    async requestUserInfoToDjango(
-        context: ActionContext<GoogleAuthenticationState, any>): Promise<any> {
+    async requestGoogleUserInfoToDjango(
+        context: ActionContext<AuthenticationState, any>): Promise<any> {
         try {
             const accessToken = localStorage.getItem("accessToken")
             const userInfoResponse: AxiosResponse<any> =
@@ -43,7 +43,7 @@ const actions: GoogleAuthenticationActions = {
             alert('사용자 정보 가져오기 실패!')
             throw error
         }
-    }
+    },
 }
 
 export default actions;

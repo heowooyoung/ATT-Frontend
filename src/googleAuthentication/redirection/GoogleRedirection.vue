@@ -7,18 +7,20 @@ import { mapActions } from 'vuex'
 
 const googleAuthenticationModule = 'googleAuthenticationModule'
 const accountModule = 'accountModule'
+const authenticationModule = 'authenticationModule'
 
 export default {
   methods: {
     ...mapActions(googleAuthenticationModule, [
-      'requestAccessTokenToDjangoRedirection', 'requestUserInfoToDjango']),
+      'requestAccessTokenToDjangoRedirection', 'requestGoogleUserInfoToDjango']),
     ...mapActions(accountModule, ['requestEmailDuplicationCheckToDjango']),
+    ...mapActions(authenticationModule, ['requestAddRedisAccessTokenToDjango']),
 
     async setRedirectData () {
         const code = this.$route.query.code
         await this.requestAccessTokenToDjangoRedirection({ code })
 
-        const userInfo = await this.requestUserInfoToDjango()
+        const userInfo = await this.requestGoogleUserInfoToDjango()
         const email = userInfo.email
         console.log('userInfo:', userInfo)
         console.log('email:', userInfo.email)
@@ -37,9 +39,9 @@ export default {
           this.$router.push('/')
         } else {
                 console.log('신규 가입 고객입니다.')
-                this.$router.push('/account/register')
+                this.$router.push('/account/google-register')
         }
-    }
+      }
   },
   async created () {
       await this.setRedirectData()
