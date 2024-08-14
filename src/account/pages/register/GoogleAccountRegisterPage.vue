@@ -49,10 +49,11 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 const googleAuthenticationModule = 'googleAuthenticationModule'
 const accountModule = 'accountModule'
+const authenticationModule = 'authenticationModule'
 
 export default {
     data () {
@@ -80,6 +81,7 @@ export default {
     methods: {
         ...mapActions(googleAuthenticationModule, ['requestGoogleUserInfoToDjango']),
         ...mapActions(accountModule, ['requestNicknameDuplicationCheckToDjango', 'requestCreateNewAccountToDjango']),
+        ...mapActions(authenticationModule, ["requestAddRedisAccessTokenToDjango"]),
 
         async requestUserInfo () {
             try {
@@ -126,7 +128,9 @@ export default {
 
                 const accessToken = localStorage.getItem("accessToken");
                 const email = accountInfo.email
+
                 console.log('register submitForm email:', email)
+                await this.requestAddRedisAccessTokenToDjango({email, accessToken})
 
                 this.$router.push('/')
             }
