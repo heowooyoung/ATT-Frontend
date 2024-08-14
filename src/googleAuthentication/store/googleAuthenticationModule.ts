@@ -1,20 +1,18 @@
 import actions, { GoogleAuthenticationActions } from "./actions"
-import mutations, { GoogleAuthenticationMutations } from "./mutations"
-import state, { GoogleAuthenticationState } from "./states"
+import state, { AuthenticationState } from "@/authentication/store/states"
+
 
 
 export interface GoogleAuthenticationModule {
     namespaced: true
-    state: GoogleAuthenticationState
+    state: AuthenticationState
     actions: GoogleAuthenticationActions
-    mutations: GoogleAuthenticationMutations
 }
 
 const googleAuthenticationModule: GoogleAuthenticationModule = {
     namespaced: true,
     state,
     actions,
-    mutations,
 }
 
 export default googleAuthenticationModule
