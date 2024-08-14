@@ -2,6 +2,7 @@ import AccountLoginPage from "@/account/pages/login/AccountLoginPage.vue"
 import GoogleAccountRegisterPage from "@/account/pages/register/GoogleAccountRegisterPage.vue"
 import KakaoAccountRegisterPage from "@/account/pages/register/KakaoAccountRegisterPage.vue"
 import NaverAccountRegisterPage from "@/account/pages/register/NaverAccountRegisterPage.vue"
+import AccountMyPage from "@/account/pages/my/AccountMyPage.vue"
 
 const AccountRoutes = [
     {
@@ -23,6 +24,11 @@ const AccountRoutes = [
         path: '/account/naver-register',
         name: 'NaverAccountRegisterPage',
         component: NaverAccountRegisterPage
+    },
+    {
+        path: '/account/mypage',
+        name: 'AccountMyPage',
+        component: AccountMyPage
     },
 ]
 
