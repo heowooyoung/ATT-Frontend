@@ -1,12 +1,12 @@
 import { ActionContext } from "vuex"
-import { KakaoAuthenticationState } from "./states"
+import { AuthenticationState } from "@/authentication/store/states"
 import { AxiosResponse } from "axios"
 import axiosInst from "@/utility/axiosInstance"
 
 export type KakaoAuthenticationActions = {
     requestKakaoOauthRedirectionToDjango(): Promise<void>
-    requestAccessTokenToDjangoRedirection(context: ActionContext<KakaoAuthenticationState, any>, payload: { code: string }): Promise<void>
-    requestKakaoUserInfoToDjango(context: ActionContext<KakaoAuthenticationState, any>): Promise<any>
+    requestAccessTokenToDjangoRedirection(context: ActionContext<AuthenticationState, any>, payload: { code: string }): Promise<void>
+    requestKakaoUserInfoToDjango(context: ActionContext<AuthenticationState, any>): Promise<any>
 }
 
 const actions: KakaoAuthenticationActions = {
@@ -18,7 +18,7 @@ const actions: KakaoAuthenticationActions = {
         })
     },
     async requestAccessTokenToDjangoRedirection(
-        context: ActionContext<KakaoAuthenticationState, any>,
+        context: ActionContext<AuthenticationState, any>,
         payload: { code: string }): Promise<void> {
 
         try {
@@ -34,7 +34,7 @@ const actions: KakaoAuthenticationActions = {
         }
     },
     async requestKakaoUserInfoToDjango(
-        context: ActionContext<KakaoAuthenticationState, any>): Promise<any> {
+        context: ActionContext<AuthenticationState, any>): Promise<any> {
         try {
             const accessToken = localStorage.getItem("accessToken")
             const userInfoResponse: AxiosResponse<any> =

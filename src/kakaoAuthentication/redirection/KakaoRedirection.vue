@@ -25,7 +25,7 @@ export default {
             console.log('userInfo:', userInfo)
             console.log('email:', email)
 
-            const isEmailDuplication = await this.requestEmailDuplicationCheckToDjango()
+            const isEmailDuplication = await this.requestEmailDuplicationCheckToDjango(email)
 
             if (isEmailDuplication === true) {
                 console.log('기존 가입 고객입니다.')
