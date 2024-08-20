@@ -3,8 +3,8 @@
     <div class="company-logo">MY PAGE</div>
     <v-img :src="imageSrc"></v-img>
     <v-card-text>
-      <h2 class="text-nickname">Nickname</h2>
-      <p class="text-user-info">Email: team_attention@google.com</p>
+      <h2 class="text-nickname">{{ nickname }}</h2>
+      <p class="text-user-info">Email: {{ email }}</p>
       <p class="text-user-info">Gender: Male</p>
       <v-divider class="my-3"></v-divider>
     </v-card-text>
@@ -44,14 +44,10 @@
   </script>
   
   <style scoped>
-  .id-card-container {
-    text-align: center;
-    position: relative;
-    padding-top: 50px;
-    display: flex;
-    justify-content: center;
-    margin-top: 170px;
-  }
+ .id-card {
+  margin-left: 40%;
+  margin-top: 5%;
+ }
 
   .text-nickname {
     text-align: center;
