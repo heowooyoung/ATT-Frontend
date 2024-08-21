@@ -1,8 +1,9 @@
 <template>
   <div id="unity-container" class="unity-desktop">
     <canvas ref="unityCanvas" id="unity-canvas"></canvas>
+    <div style="margin-bottom: 10px"></div>
     <p>Unity에서 받은 메시지: {{ unityMessage }}</p>
-    <button @click="sendMessageToUnity('Hello from Vue!')">Send Message to Unity</button>
+    <button class="sendMessageToUnity-button" @click="sendMessageToUnity('Hello from Vue!')">Send Message to Unity</button>
   </div>
 </template>
 
@@ -87,5 +88,19 @@ export default {
   max-width: 100%;
   max-height: 100%;
   outline: none;
+}
+
+.sendMessageToUnity-button{
+  background-color: rgb(235, 235, 72);
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  width: 300px;
+  margin-top: 10px;
+  margin-bottom: 50px;
 }
 </style>
