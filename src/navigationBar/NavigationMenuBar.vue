@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar color="yellow" app dark height="48">
+    <v-app-bar color="#ebeb48" height="48">
       <v-toolbar-title>
         <v-btn text @click="goToHome" class="navbar-title-btn">
           <span> IF </span>
@@ -15,7 +15,7 @@
       <v-menu v-if="isAuthenticated" close-on-content-click>
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" class="btn-text" style="margin-right: 16px">
-            <b>My Page</b>
+            <v-icon class="mdi-icon">mdi-account-circle</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -73,9 +73,9 @@
     mounted() {
       console.log("navigation bar mounted()")
       const userToken = localStorage.getItem("userToken")
-      console.log("You already has a userToken!")
       if (userToken)
       {
+        console.log("You already has a userToken!")
         this.$store.state.authenticationModule.isAuthenticated = true
       }
     },
@@ -92,7 +92,6 @@
   .mdi-icon {
     color: black;
     font-size: 36px;
-    margin-right: 8px;
   }
   
   .btn-text {
