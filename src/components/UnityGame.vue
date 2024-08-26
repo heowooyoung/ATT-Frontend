@@ -38,7 +38,7 @@ export default {
     },
     sendMessageToUnity(message) {
       if (this.unityInstance) {
-        this.unityInstance.SendMessage('chatPanel', 'VueEvent', message);
+        this.unityInstance.SendMessage('ButtonSend', 'VueEvent', message);
       } else {
         console.error("Unity instance is not ready.");
       }
