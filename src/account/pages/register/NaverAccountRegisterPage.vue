@@ -119,6 +119,7 @@ export default {
 
             if (this.$refs.form.validate()) {
                 const accountInfo = {
+                    loginType: 'NAVER',
                     email: this.email,
                     nickname: this.nickname,
                 }
