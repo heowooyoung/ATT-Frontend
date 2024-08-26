@@ -12,7 +12,9 @@ import { defineComponent } from 'vue'
 import NavigationMenuBar from './navigationBar/NavigationMenuBar.vue';
 
 export default defineComponent({
-  components: { NavigationMenuBar },
+  components: { 
+    NavigationMenuBar,
+   },
   name: 'App',
 
   data () {
@@ -22,4 +24,3 @@ export default defineComponent({
   },
 })
 </script>
-
