@@ -8,7 +8,7 @@ const djangoAxiosInst: AxiosInstance = axios.create({
 
 const fastapiAxiosInst: AxiosInstance = axios.create({
     baseURL: env.api.AI_BASE_URL,
-    timeout: 2500,
+    timeout: 10000, // 가끔 응답 오래걸리므로 2.5초 -> 10초로 하기
 })
 
 
