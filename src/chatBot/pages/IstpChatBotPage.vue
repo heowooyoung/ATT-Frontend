@@ -24,7 +24,7 @@ data() {
     };
 },
 methods: {
-    ...mapActions(userInputModule, ['requestResponseToFastAPI']),
+    ...mapActions(userInputModule, ['sendMessageToFastAPI', 'requestAnswerToFastAPI']),
 
     async sendMessage() {
         if (this.userInput.trim() === "") return;
@@ -35,11 +35,13 @@ methods: {
         this.userInput = '' // 메세지 보냈다면 초기화하기
         
         // 메세지 챗봇에게 보내기 action으로 구현
-        const response = await this.requestResponseToFastAPI({"data": this.userInputMessage})
-        console.log('istp 응답: ',response)
-        //const response = await this.requestResponseToFastAPI()
+        await this.sendMessageToFastAPI({"data": this.userInputMessage})
+        // 얘도 await 해줘야 응답이 옴
+        const response = await this.requestAnswerToFastAPI()
+        //console.log('response? :', response)
         this.chatBotOutput = response.generatedText
-        this.chatHistory.push({sender: 'Ai', text: this.chatBotOutput})
+        console.log('istp 응답: ', this.chatBotOutput) // undefined 반환 
+        this.chatHistory.push({sender: '이상형', text: this.chatBotOutput})
 
         this.chatBotOutput = ''
     },
