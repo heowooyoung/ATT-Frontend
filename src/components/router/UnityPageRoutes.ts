@@ -1,4 +1,4 @@
-import UnityPage from '@/components/UnityGame.vue'
+import UnityPage from '@/components/pages/UnityGame.vue'
 
 
 const UnitytRoutes = [

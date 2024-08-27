@@ -1,22 +1,72 @@
 <template>
-  <div id="unity-container" class="unity-desktop">
-    <canvas ref="unityCanvas" id="unity-canvas"></canvas>
-    <div style="margin-bottom: 10px"></div>
-    <p>Unity에서 받은 메시지: {{ unityMessage }}</p>
-    <button class="sendMessageToUnity-button" @click="sendMessageToUnity('Hello from Vue!')">Send Message to Unity</button>
+  <div>
+    <div id="unity-container" class="unity-desktop">
+      <canvas ref="unityCanvas" id="unity-canvas"></canvas>
+      <div style="margin-bottom: 10px"></div>
+      <p>Unity에서 받은 메시지!!: {{ unityMessage }}</p>
+      <button class="sendMessageToUnity-button" @click="sendMessageToUnity('Hello from Vue!')">Send Message to Unity</button>
+    </div>
+
+    <!-- ChatBot Container -->
+    <div>
+      <h1>ChatBot</h1>
+      <div v-for="(message, index) in chatHistory" :key="index" class="message">
+        <strong>{{ message.sender }}:</strong> {{ message.text }}
+      </div>
+
+      <input
+        v-model="unityMessage"
+        @keyup.enter="sendMessageToChatBot"
+        placeholder="메세지를 입력하세요..."
+      />
+      <button @click="sendMessageToChatBot">Send</button>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+const userInputModule = 'userInputModule'
+
 export default {
   name: 'unity-game',
   data() {
     return {
       unityMessage: '',
+      userInput: '',
       unityInstance: null,
+      chatHistory: [],
     };
   },
   methods: {
+    // Chatbot Part
+    ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI']),
+
+    async sendMessageToChatBot() {
+      // 아무 것도 안 보냈다면 처리 x
+      if (this.unityMessage.trim() === "") return;
+      
+      const userMessage = this.unityMessage;
+      // sender 부분 User 대신 닉네임으로 가져와도 될 듯?
+      this.chatHistory.push({ sender: "Unity", text: userMessage })
+      this.userInputMessage = this.unityMessage
+      this.unityMessage = '' // 메세지 보냈다면 초기화하기
+      console.log("sendMessageToChatBot message :",this.userInputMessage)
+      // 메세지 챗봇에게 보내기 action으로 구현
+      await this.sendMessageToFastAPI({"data": this.userInputMessage})
+
+      // 얘도 await 해줘야 응답이 옴
+      const response = await this.requestAnswerToFastAPI()
+      
+      //console.log('response? :', response)
+      this.chatBotOutput = response.generatedText
+      console.log('istp 응답: ', this.chatBotOutput) // undefined 반환 
+      this.chatHistory.push({sender: '이상형', text: this.chatBotOutput})
+
+      this.chatBotOutput = ''
+    },
+    
+    // Unity Part
     initializeUnity() {
       const canvas = this.$refs.unityCanvas;
       const script = document.createElement("script");
@@ -39,6 +89,7 @@ export default {
     sendMessageToUnity(message) {
       if (this.unityInstance) {
         this.unityInstance.SendMessage('ButtonSend', 'VueEvent', message);
+        // this.sendMessageToChatBot()
       } else {
         console.error("Unity instance is not ready.");
       }
@@ -62,8 +113,8 @@ export default {
   },
   mounted() {
     window.unityEvent = (message) => {
-      console.log("Message received from Unity:", message);
-      this.unityMessage = message;
+      console.log("mounted Message received from Unity:", message);
+      this.unityMessage = message;  // Unity에서 받은 메시지를 저장
     };
 
     this.initializeUnity();
