@@ -1,126 +1,198 @@
 <template>
-  <div class="home-container">
-    <div class="text-container">
-      <h2 class="title"> "  I F  " <br/>
-      AI 기반 이상형 매칭 게임 서비스 <br/></h2>
-      <div style="margin-top: 60px; margin-bottom: 20px"></div>
-      <p class="subtitle">SINCE 2024</p>
-      <div style="margin-bottom: 10px"></div>
-      <p class="description">
-        '이프(IF)'는 사용자에게 <br/>
-        다양한 유형의 AI 이성과의 소개팅 경험을 제공하고 <br/>
-        이상형을 정립할 수 있는 서비스를 제공하고자 합니다.
-      </p>
-      <div class="buttons">
-        <button class="goToGame-button" @click="goToGamePage">
-          AI 이상형과 대화 시작하기
-        </button>
-      </div>
-      <img :src="imageSrc" alt="Home Image" class="home-image" />
-      </div>
+  <v-container fluid class="main-container">
+    <div class="content-container">
+      <!-- 왼쪽 텍스트 및 이미지 -->
+      <div class="text-section">
+        <img :src="require('@/assets/images/icon/icon.png')" class="icon img" alt="아이콘">
+        <h1 class="title">AI로 시작하는</h1>
+        <p class="subtitle">소개팅 연애 시뮬레이션 게임, IF</p>
 
-    <div class="footer-container">
-      <p class="company-info">
-        법인명(상호): 주식회사 어텐션 대표자(성명): 어텐션 사업자 등록번호 안내:
-        [123-123-123]
-      </p>
-      <p class="privacy-info">개인정보보호책임자: 어텐션(team_attention@kakao.com)</p>
-      <p class="reserved-info">2024 Attention Korea LLC. All Rights Reserved.</p>
+        <!-- 버튼들 -->
+        <v-row class="button-group" justify="start">
+          <v-btn color="primary" class="mr-4 btn_basic" @click="startGame">
+            게임 시작
+          </v-btn>
+          <v-btn outlined class="btn_outlined" @click="learnMore">
+            더 알아보기
+          </v-btn>
+        </v-row>
+      </div>
+      
+      <!-- 오른쪽 이미지 -->
+      <div class="image-section">
+        <div class="ani_clip_action">
+          <img :src="require('@/assets/images/talk/img-key-slide01-removebg-preview.png')" class="main-image img1" alt="채팅1">
+          <img :src="require('@/assets/images/talk/img-key-slide02-removebg-preview.png')" class="main-image img2" alt="채팅2">
+          <img :src="require('@/assets/images/talk/img-key-slide03-removebg-preview.png')" class="main-image img3" alt="채팅3">
+          <img :src="require('@/assets/images/talk/img-key-slide04-removebg-preview.png')" class="main-image img4" alt="채팅4">
+          <img :src="require('@/assets/images/talk/img-key-slide05-removebg-preview.png')" class="main-image img5" alt="채팅5">
+          <img :src="require('@/assets/images/talk/img-key-slide06-removebg-preview.png')" class="main-image img6" alt="채팅6">
+          <img :src="require('@/assets/images/talk/img-key-slide07-removebg-preview.png')" class="main-image img7" alt="채팅7">
+        </div>
+      </div>
     </div>
-  </div>
+  </v-container>
 </template>
 
-<script>
-import { defineComponent } from "vue";
-import imageSrc from "@/assets/images/homeImages/image1.jpg";
-import router from "@/router";
-import { mapActions, mapState } from "vuex";
-const authenticationModule = "authenticationModule";
+<script lang="ts">
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "HomeView",
-  data() {
-    return {
-      imageSrc,
-    };
-  },
-  computed: {
-    ...mapState(authenticationModule, ["isAuthenticated"]),
-  },
+  name: 'HomeView',
   methods: {
-    ...mapActions(authenticationModule, ["requestLogoutToDjango"]),
-
-    goToGamePage() {
-      router.push("/game-page");
+    startGame() {
+      console.log('게임 시작 클릭됨');
+    },
+    learnMore() {
+      console.log('더 알아보기 클릭됨');
     },
   },
 });
 </script>
 
 <style scoped>
-.home-container {
-  text-align: center;
+/* 기본 스타일 리셋 */
+html, body {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  box-sizing: border-box;
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", sans-serif;
+  font-feature-settings: "clig" off, "liga" off;
+  color: #000;
+  -webkit-font-smoothing: antialiased;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.home-image {
-  width: 60%;
-  height: auto;
-  margin: auto;
-  display: block;
-  object-fit: cover;
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.text-container {
-  margin-top: 80px;
+.content-container {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  max-width: 1200px;
+  height: 60vh;
 }
 
-.subtitle {
-  font-size: 25px;
-  font-weight: bold;
+.text-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  top: 50px;
 }
 
-.title {
-  font-size: 30px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-.description {
-  font-size: 18px;
-  color: #777;
-}
-
-.goToGame-button{
-  background-color: rgb(235, 235, 72);
-  color: black;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  width: 300px;
-  margin-top: 40px;
+.icon.img {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100px;
+  margin-top: -50px;
   margin-bottom: 50px;
 }
 
-.footer-container {
-  text-align: center;
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
-  margin-top: 50px;
-  background-color: rgb(235, 235, 72);
 }
 
-.footer-container p {
-  color: #000000;
-  font-size: 13px;
+.ani_clip_action {
+  position: relative;
+  width: 379px;
+  height: 658px;
+  margin: 0 auto;
+  padding-top: 20px;
 }
 
-.company-info,
-.contact-info,
-.privacy-info,
-.additional-links {
-  margin: 10px 0;
-  color: #555;
+.img1, .img2, .img3, .img4, .img5, .img6, .img7 {
+  position: absolute;
+  width: 379px;
+  height: 658px;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.img1 { opacity: 1; } 
+.img2 { animation: fadeIn 1s forwards 2s; }
+.img3 { animation: fadeIn 1s forwards 4s; }
+.img4 { animation: fadeIn 1s forwards 6s; }
+.img5 { animation: fadeIn 1s forwards 8s; }
+.img6 { animation: fadeIn 1s forwards 10s; }
+.img7 { animation: fadeIn 1s forwards 12s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.main-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.title {
+  font-family: 'Arial', sans-serif;
+  font-size: 64px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-family: 'Arial', sans-serif;
+  font-size: 38px;
+  color: #3333FF;
+  line-height: 1.2;
+  margin-top: 0;
+}
+
+.button-group {
+  margin-top: 20px;
+}
+
+.btn_basic, .btn_outlined {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 154px;
+  height: 50px;
+}
+
+.btn_basic {
+  background-color: #1E90FF;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease-out;
+}
+
+.btn_basic:hover {
+  background-color: #4682B4;
+}
+
+.btn_outlined {
+  border: 2px solid #1E90FF;
+  color: #1E90FF;
+  background-color: transparent;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
+}
+
+.btn_outlined:hover {
+  background-color: #1E90FF;
+  color: white;
 }
 </style>
