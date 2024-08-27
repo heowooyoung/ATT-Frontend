@@ -1,7 +1,7 @@
 import accountModule from '@/account/store/accountModule'
 import authenticationModule from '@/authentication/store/authenticationModule'
 import boardModule from '@/board/store/boardModule'
-import userInputModule from '@/chatBot/store/userInputModule'
+import userInputModule from '@/components/store/userInputModule'
 import aiCommandModule from '@/gatherEverything/store/aiCommandModule'
 import googleAuthenticationModule from '@/googleAuthentication/store/googleAuthenticationModule'
 import kakaoAuthenticationModule from '@/kakaoAuthentication/store/kakaoAuthenticationModule'
@@ -25,6 +25,6 @@ export default createStore({
     kakaoAuthenticationModule,
     naverAuthenticationModule,
     aiCommandModule,
-    userInputModule,
+    userInputModule, // Chatbot으로 통합
   }
 })
