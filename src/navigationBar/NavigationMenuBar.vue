@@ -1,114 +1,89 @@
 <template>
-    <v-app-bar color="#ebeb48" height="48">
-      <v-toolbar-title>
-        <v-btn text @click="goToHome" class="navbar-title-btn">
-          <span> IF </span>
-        </v-btn>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-
-      <v-btn v-if="!isAuthenticated" text @click="signIn" class="btn-text">
-        <v-icon left>mdi-login</v-icon>
-        <span>LOGIN</span>
-      </v-btn>
-  
-      <v-menu v-if="isAuthenticated" close-on-content-click>
-        <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" class="btn-text" style="margin-right: 16px">
-            <v-icon class="mdi-icon">mdi-account-circle</v-icon>
+  <v-app-bar
+    app
+    class="transparent-nav-bar"
+    flat
+    elevation="0"
+  >
+    <v-container class="nav-content-container">
+      <v-row align="center" justify="space-between">
+        <v-col cols="auto">
+          <v-btn @click="goToHome" class="transparent-btn" text>
+            <img
+              :src="require('@/assets/images/logo/if_logo.png')"
+              alt="IF 로고"
+              class="logo-image"
+            />
           </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="(item, index) in myPageItems"
-            :key="index"
-            @click="item.action">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar>
-  </template>
-  
-  <script scoped>
-  import "@mdi/font/css/materialdesignicons.css";
-  import router from "@/router";
-  import { mapActions, mapState } from "vuex";
-  const authenticationModule = "authenticationModule";
-  
-  export default {
-    data() {
-      return {
-        myPageItems: [
-          {
-            title: "MY PAGE",
-            action: () => {this.goToMyPage();},
-          },
-          {
-            title: "LOGOUT",
-            action: () => {this.signOut()},
-          },
-        ],
-      };
+        </v-col>
+        <v-col cols="auto">
+          <v-btn text @click="goToPostPage" class="transparent-btn">
+            <v-icon left>mdi-forum</v-icon>
+            <span>익명 게시판</span>
+          </v-btn>
+          <v-btn v-if="!isAuthenticated" text @click="signIn" class="transparent-btn">
+            <v-icon left>mdi-login</v-icon>
+            <span>로그인</span>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app-bar>
+</template>
+
+<script lang="ts">
+import router from '@/router'
+import { mapState, mapActions } from 'vuex'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'NavigationMenuBar',
+  computed: {
+    ...mapState('authenticationModule', ['isAuthenticated'])
+  },
+  methods: {
+    ...mapActions('authenticationModule', ['requestLogoutToDjango']),
+    goToHome() {
+      router.push('/')
     },
-    computed: {
-      ...mapState(authenticationModule, ["isAuthenticated"]),
+    signIn() {
+      router.push('/account/login')
     },
-    methods: {
-      ...mapActions(authenticationModule, ["requestLogoutToDjango"]),
-      goToHome() {
-        router.push("/")
-      },
-      signIn() {
-        router.push("/account/login")
-      },
-      signOut() {
-        this.requestLogoutToDjango()
-        router.push("/")
-      },
-      goToMyPage() {
-        router.push("/account/mypage")
-      },
-    },
-    mounted() {
-      console.log("navigation bar mounted()")
-      const userToken = localStorage.getItem("userToken")
-      if (userToken)
-      {
-        console.log("You already has a userToken!")
-        this.$store.state.authenticationModule.isAuthenticated = true
-      }
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .navbar-title-btn {
-    color: black;
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .mdi-icon {
-    color: black;
-    font-size: 36px;
-  }
-  
-  .btn-text {
-    font-size: 18px;
-    margin-right: 16px;
-    color: black;
-  }
-  
-  .v-btn {
-    text-transform: uppercase;
-  }
-  
-  .v-btn:hover .btn-text {
-    color: white;
-  }
-  
-  .v-btn:focus .btn-text {
-    color: white;
-  }
-  </style>
+    goToPostPage() {
+      router.push('/post/list')
+    }
+  },
+})
+</script>
+
+<style scoped>
+.transparent-nav-bar {
+  background-color: transparent; 
+  box-shadow: none; 
+  border: none; 
+  padding: 0; 
+}
+
+.nav-content-container {
+  width: 100%; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 0 115px; 
+}
+
+.transparent-btn {
+  color: black; 
+  transition: background-color 0.3s;
+}
+
+.transparent-btn:hover {
+  background-color: #ADD8E6; 
+}
+
+.logo-image {
+  height: 60px; 
+  width: 80px; 
+  object-fit: contain; 
+  display: block;
+}
+</style>
