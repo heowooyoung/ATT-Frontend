@@ -42,29 +42,79 @@ export default {
     // Chatbot Part
     ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI']),
 
+    // 무조건 일대일 대응 채팅
     async sendMessageToChatBot() {
-      // 아무 것도 안 보냈다면 처리 x
+      // 아무 것도 안 보냈다면 처리하지 않음
       if (this.unityMessage.trim() === "") return;
-      
+
       const userMessage = this.unityMessage;
-      // sender 부분 User 대신 닉네임으로 가져와도 될 듯?
-      this.chatHistory.push({ sender: "Unity", text: userMessage })
-      this.userInputMessage = this.unityMessage
-      this.unityMessage = '' // 메세지 보냈다면 초기화하기
-      console.log("sendMessageToChatBot message :",this.userInputMessage)
-      // 메세지 챗봇에게 보내기 action으로 구현
-      await this.sendMessageToFastAPI({"data": this.userInputMessage})
-
-      // 얘도 await 해줘야 응답이 옴
-      const response = await this.requestAnswerToFastAPI()
       
-      //console.log('response? :', response)
-      this.chatBotOutput = response.generatedText
-      console.log('istp 응답: ', this.chatBotOutput) // undefined 반환 
-      this.chatHistory.push({sender: '이상형', text: this.chatBotOutput})
+      // Unity에서 받은 메시지를 대화 기록에 추가
+      this.chatHistory.push({ sender: "나", text: userMessage });
+      
+      this.userInputMessage = this.unityMessage;
+      this.unityMessage = ""; // 메시지를 보낸 후 초기화
+      console.log("sendMessageToChatBot message:", this.userInputMessage);
 
-      this.chatBotOutput = ''
+      // `sendMessageToFastAPI`의 결과를 기다림
+      let res = await this.sendMessageToFastAPI({ "data": this.userInputMessage });
+
+      let response = null;
+
+      // 응답이 올 때까지 무조건 기다리는 부분
+      while (!response) {
+        try {
+          // 응답이 성공적으로 올 때까지 계속 요청
+          const potentialResponse = await this.requestAnswerToFastAPI();
+          
+          if (potentialResponse && potentialResponse.generatedText) {
+            // 응답이 성공적이라면 response에 결과 저장
+            response = potentialResponse;
+            this.chatBotOutput = response.generatedText; // 챗봇 응답 저장
+            console.log('ISTP 응답: ', this.chatBotOutput);
+
+            // 챗봇의 응답을 대화 기록에 추가
+            this.chatHistory.push({ sender: '이상형', text: this.chatBotOutput });
+
+            this.chatBotOutput = ''; // 응답 저장소 초기화
+          } else {
+            console.log('응답이 아직 준비되지 않았습니다, 다시 시도합니다...');
+          }
+        } catch (error) {
+          console.error("응답을 기다리는 중 오류가 발생했습니다:", error);
+          // 오류가 발생해도 무조건 다시 시도하도록 설정
+        }
+        // 비동기 함수 호출 사이에 지연 시간을 두어 서버에 과부하를 줄 수 있는 빠른 루프를 방지합니다.
+        await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
+      }
     },
+
+ 
+
+    // 기존 채팅 구현 
+    // async sendMessageToChatBot() {
+    //   // 아무 것도 안 보냈다면 처리 x
+    //   if (this.unityMessage.trim() === "") return;
+      
+    //   const userMessage = this.unityMessage;
+    //   // sender 부분 User 대신 닉네임으로 가져와도 될 듯?
+    //   this.chatHistory.push({ sender: "Unity", text: userMessage })
+    //   this.userInputMessage = this.unityMessage
+    //   this.unityMessage = '' // 메세지 보냈다면 초기화하기
+    //   console.log("sendMessageToChatBot message :",this.userInputMessage)
+    //   // 메세지 챗봇에게 보내기 action으로 구현
+    //   const res = await this.sendMessageToFastAPI({"data": this.userInputMessage})
+      
+    //   // 얘도 await 해줘야 응답이 옴
+    //   const response = await this.requestAnswerToFastAPI()
+      
+    //   //console.log('response? :', response)
+    //   this.chatBotOutput = response.generatedText
+    //   console.log('istp 응답: ', this.chatBotOutput) // undefined 반환 
+    //   this.chatHistory.push({sender: '이상형', text: this.chatBotOutput})
+
+    //   this.chatBotOutput = ''
+    // },
     
     // Unity Part
     initializeUnity() {
@@ -89,7 +139,6 @@ export default {
     sendMessageToUnity(message) {
       if (this.unityInstance) {
         this.unityInstance.SendMessage('ButtonSend', 'VueEvent', message);
-        // this.sendMessageToChatBot()
       } else {
         console.error("Unity instance is not ready.");
       }
