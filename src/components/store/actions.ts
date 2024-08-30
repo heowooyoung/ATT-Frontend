@@ -20,10 +20,10 @@ const actions: UserInputActions = {
             console.log('sendMessageToFastAPI()')
             const { data } = payload
             console.log("userInput:", data)
-            const command = 7
+            const command = 8 // 7 : istp,   8 : enfp
 
             const response = await axiosInst.fastapiAxiosInst.post(
-                '/request-ai-command', { command, "data":[data] })
+                '/request-ai-command', { command, "data": [data] })
             return response.data
         } catch (error) {
             // Axios time out 나는 이슈 발생 (2500ms) 수정하기
@@ -35,8 +35,8 @@ const actions: UserInputActions = {
         try {
             console.log('requestAnswerToFastAPI()')
             const response = await axiosInst.fastapiAxiosInst.post(
-                '/istp-test-result')
-            console.log('actions ISTP Answer: ', response.data)
+                '/enfp-test-result')
+            console.log('actions ENFP Answer: ', response.data)
             return response.data
         } catch (error) {
             console.log('requestAnswerToFastAPI() 중 문제 발생:', error)
