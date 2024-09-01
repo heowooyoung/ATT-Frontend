@@ -19,6 +19,7 @@ export default {
       chatBotMessage: '',
       unityInstance: null,
       chatHistory: [],
+      messageList: [],
     };
   },
   methods: {
@@ -88,9 +89,11 @@ export default {
       };
       document.body.appendChild(script);
     },
-    sendMessageToUnity(message) {
-      if (this.unityInstance) {
-        this.unityInstance.SendMessage('ButtonSend', 'VueEvent', message);
+      sendMessageToUnity(message) {
+        if (this.unityInstance) {
+          for (let sentence of message) {
+            this.unityInstance.SendMessage('ButtonSend', 'VueEvent', sentence.trim());
+          }
       } else {
         console.error("Unity instance is not ready.");
       }
