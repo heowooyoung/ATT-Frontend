@@ -68,7 +68,6 @@ export default {
       }
     },
 
-
     // Unity Part
     initializeUnity() {
       const canvas = this.$refs.unityCanvas;
@@ -91,9 +90,14 @@ export default {
     },
       sendMessageToUnity(message) {
         if (this.unityInstance) {
-          for (let sentence of message) {
-            this.unityInstance.SendMessage('ButtonSend', 'VueEvent', sentence.trim());
-          }
+          message.forEach((sentence, index) => {
+            setTimeout(() => {
+              this.unityInstance.SendMessage('ButtonSend', 'VueEvent', sentence.trim());
+            }, index * 1000); // index * 1000 밀리초 (1초 간격)으로 시간차를 두어 보냅니다.
+          });
+          // for (let sentence of message) {
+          //   this.unityInstance.SendMessage('ButtonSend', 'VueEvent', sentence.trim());
+          // }
       } else {
         console.error("Unity instance is not ready.");
       }
