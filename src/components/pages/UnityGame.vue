@@ -92,7 +92,7 @@ export default {
         if (this.unityInstance) {
           message.forEach((sentence, index) => {
             setTimeout(() => {
-              this.unityInstance.SendMessage('ButtonSend', 'VueEvent', sentence.trim());
+              this.unityInstance.SendMessage('GameManager', 'VueEvent', sentence.trim());
             }, index * 1000); // index * 1000 밀리초 (1초 간격)으로 시간차를 두어 보냅니다.
           });
           // for (let sentence of message) {
