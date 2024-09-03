@@ -35,16 +35,17 @@
 </template>
 
 <script lang="ts">
+import router from '@/router';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'HomeView',
   methods: {
     startGame() {
-      console.log('게임 시작 클릭됨');
+      router.push('/game-page')
     },
     learnMore() {
-      console.log('더 알아보기 클릭됨');
+      router.push('/')
     },
   },
 });
