@@ -50,7 +50,7 @@ export default defineComponent({
       router.push('/account/login')
     },
     goToPostPage() {
-      router.push('/post/list')
+      router.push('/board/list')
     }
   },
 })
