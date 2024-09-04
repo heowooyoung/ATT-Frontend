@@ -89,19 +89,22 @@ export default {
     },
       sendMessageToUnity(message) {
         if (this.unityInstance) {
-          if (this.sceneNumber == "0")
-          {
+          if (this.sceneNumber === "0") {  // SceneNumber가 0일 때: 메시지를 문장 단위로 여러개 전송
             message.forEach((sentence, index) => {
               setTimeout(() => {
                 this.unityInstance.SendMessage('GameManager', 'VueEvent', sentence.trim());
               }, index * 1000); // index * 1000 밀리초 (1초 간격)으로 시간차를 두어 보냅니다.
             });
           }
-          else if (this.sceneNumber == "1")
-          {
-            this.unityInstance.SendMessage('GameManager', 'VueEvent', message);
+          else if (this.sceneNumber === "1") {  // SceneNumber가 1일 때: 메시지를 통째로 전송
+            message.forEach((sentence, index) => {
+              this.chatBotMessage += sentence;
+            });
+            this.unityInstance.SendMessage('GameManager', 'VueEvent', this.chatBotMessage);
+          } else {
+            console.warn(`Unexpected sceneNumber: ${this.sceneNumber}`);
           }
-        }
+        } 
         else {
           console.error("Unity instance is not ready.");
       }
