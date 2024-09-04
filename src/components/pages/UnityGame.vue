@@ -20,6 +20,7 @@ export default {
       unityInstance: null,
       chatHistory: [],
       messageList: [],
+      sceneNumber: "0",
     };
   },
   methods: {
@@ -28,7 +29,6 @@ export default {
 
     // 무조건 일대일 대응 채팅
     async sendMessageToChatBot() {
-  
       if (this.userMessage.trim() === "") return; // 아무 것도 안 보냈다면 처리하지 않음
       // Unity에서 받은 메시지를 대화 기록에 추가
       this.chatHistory.push({ sender: "나", text: this.userMessage });
@@ -40,7 +40,6 @@ export default {
       let res = await this.sendMessageToFastAPI({ "data": this.userInputMessage });
 
       let response = null;
-
       // 응답이 올 때까지 무조건 기다리는 부분
       while (!response) {
         try {
@@ -90,16 +89,24 @@ export default {
     },
       sendMessageToUnity(message) {
         if (this.unityInstance) {
-          message.forEach((sentence, index) => {
-            setTimeout(() => {
-              this.unityInstance.SendMessage('GameManager', 'VueEvent', sentence.trim());
-            }, index * 1000); // index * 1000 밀리초 (1초 간격)으로 시간차를 두어 보냅니다.
-          });
-          // for (let sentence of message) {
-          //   this.unityInstance.SendMessage('ButtonSend', 'VueEvent', sentence.trim());
-          // }
-      } else {
-        console.error("Unity instance is not ready.");
+          if (this.sceneNumber === "0") {  // SceneNumber가 0일 때: 메시지를 문장 단위로 여러개 전송
+            message.forEach((sentence, index) => {
+              setTimeout(() => {
+                this.unityInstance.SendMessage('GameManager', 'VueEvent', sentence.trim());
+              }, index * 1000); // index * 1000 밀리초 (1초 간격)으로 시간차를 두어 보냅니다.
+            });
+          }
+          else if (this.sceneNumber === "1") {  // SceneNumber가 1일 때: 메시지를 통째로 전송
+            message.forEach((sentence, index) => {
+              this.chatBotMessage += sentence;
+            });
+            this.unityInstance.SendMessage('GameManager', 'VueEvent', this.chatBotMessage);
+          } else {
+            console.warn(`Unexpected sceneNumber: ${this.sceneNumber}`);
+          }
+        } 
+        else {
+          console.error("Unity instance is not ready.");
       }
     },
     resizeUnityCanvas() {
@@ -121,10 +128,13 @@ export default {
   },
   mounted() {
     window.unityEvent = (message) => {
-      console.log("mounted Message received from Unity:", message);
-      this.userMessage = message;  // Unity에서 받은 메시지를 저장
+      const [sceneNumber, userMessage] = message.split('[SceneNumber]');
+      console.log("Scenenumber received from Unity:", sceneNumber);
+      console.log("Message received from Unity:", userMessage);
+      this.sceneNumber = sceneNumber;
+      this.userMessage = userMessage;
       this.sendMessageToChatBot();
-    };
+};
 
     this.initializeUnity();
     window.addEventListener('resize', this.resizeUnityCanvas);
@@ -148,19 +158,5 @@ export default {
   max-width: 100%;
   max-height: 100%;
   outline: none;
-}
-
-.sendMessageToUnity-button{
-  background-color: rgb(235, 235, 72);
-  color: black;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  width: 300px;
-  margin-top: 10px;
-  margin-bottom: 50px;
 }
 </style>
