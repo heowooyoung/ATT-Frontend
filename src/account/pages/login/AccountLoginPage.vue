@@ -1,37 +1,37 @@
 <template>
 <v-container class="login-container">
-    <div class="login-box">
-    <h1>로그인</h1>
-    <p class="description">이메일과 비밀번호를 입력하세요.</p>
-    <v-form @submit.prevent="login" ref="loginForm">
-        <v-text-field
-        v-model="email"
-        label="이메일"
-        type="email"
-        :rules="emailRules"
-        required
-        ></v-text-field>
-        <v-text-field
-        v-model="password"
-        label="비밀번호"
-        type="password"
-        :rules="passwordRules"
-        required
-        ></v-text-field>
-        <div class="forgot-password">
-        <a href="#">비밀번호를 잊으셨나요?</a>
-        </div>
-        <v-btn class="login-btn" type="submit">로그인</v-btn>
-    </v-form>
-        <p class="signup-link">
-        계정이 있으신가요? <router-link to="/account/signup">계정생성</router-link>
-        </p>
-    <div class="social-login-buttons">
-        <v-img class="google-login-btn" block @click="goToGoogleLogin"></v-img>
-        <v-img class="kakao-login-btn" block @click="goToKakaoLogin"></v-img>
-        <v-img class="naver-login-btn" block @click="goToNaverLogin"></v-img>
+<div class="login-box">
+<h1>로그인</h1>
+<p class="description">이메일과 비밀번호를 입력하세요.</p>
+<v-form @submit.prevent="login" ref="loginForm">
+    <v-text-field
+    v-model="email"
+    label="이메일"
+    type="email"
+    :rules="emailRules"
+    required
+    ></v-text-field>
+    <v-text-field
+    v-model="password"
+    label="비밀번호"
+    type="password"
+    :rules="passwordRules"
+    required
+    ></v-text-field>
+    <div class="forgot-password">
+    <a href="#">비밀번호를 잊으셨나요?</a>
     </div>
-    </div>
+    <v-btn class="login-btn" type="submit">로그인</v-btn>
+</v-form>
+    <p class="signup-link">
+    계정이 있으신가요? <router-link to="/account/signup">계정생성</router-link>
+    </p>
+<div class="social-login-buttons">
+    <v-img class="google-login-btn" block @click="goToGoogleLogin"></v-img>
+    <v-img class="kakao-login-btn" block @click="goToKakaoLogin"></v-img>
+    <v-img class="naver-login-btn" block @click="goToNaverLogin"></v-img>
+</div>
+</div>
 </v-container>
 </template>
 
@@ -68,7 +68,7 @@ await store.dispatch("jwtAuthenticationModule/requestjwtOauthRedirectionToDjango
 
 const login = async () => {
 if (loginForm.value.validate()) {
-    console.log('Login with:', email.value, password.value)
+console.log('Login with:', email.value, password.value)
 }
 }
 </script>
@@ -77,7 +77,8 @@ if (loginForm.value.validate()) {
 .login-container {
 display: flex;
 justify-content: center;
-margin-top: 10vh;
+margin-top: 2vh;
+min-height: 2vh;
 }
 
 .login-box {
@@ -165,4 +166,4 @@ background-image: url("@/assets/images/fixed/kakaoLogin.png");
 .naver-login-btn {
 background-image: url("@/assets/images/fixed/naverLogin.png");
 }
-</style>  
+</style>

@@ -5,39 +5,59 @@
       <v-text-field
         v-model="user.id"
         label="아이디"
+        hide-details
+        class="no-border"
         required
       ></v-text-field>
       <v-text-field
         v-model="user.password"
         label="비밀번호"
         type="password"
+        hide-details
+        class="no-border"
         required
       ></v-text-field>
       <v-text-field
         v-model="user.passwordConfirm"
         label="비밀번호 확인"
         type="password"
+        hide-details
+        class="no-border"
         required
       ></v-text-field>
       <v-text-field
         v-model="user.email"
         label="[선택] 이메일주소 (비밀번호 찾기 등 본인 확인용)"
         type="email"
+        hide-details
+        class="no-border"
       ></v-text-field>
       <v-text-field
         v-model="user.name"
         label="이름"
+        hide-details
+        class="no-border"
+        required
+      ></v-text-field>
+      <v-text-field
+        v-model="user.nickname"
+        label="닉네임"
+        hide-details
+        class="no-border"
         required
       ></v-text-field>
       <v-select
         v-model="user.mbti"
         :items="mbtiOptions"
         label="MBTI"
+        hide-details
+        class="no-border"
         required
       ></v-select>
       <v-radio-group
         v-model="user.gender"
         label="성별"
+        class="no-border"
         required
       >
         <v-radio label="남자" value="M"></v-radio>
@@ -65,6 +85,7 @@ const user = reactive({
   passwordConfirm: '',
   email: '',
   name: '',
+  nickname: '',
   mbti: '',
   gender: '',
 });
@@ -92,7 +113,8 @@ const onSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10vh;
+  margin-top: 2vh;
+  min-height: 2vh;
 }
 
 .signup-form {
@@ -115,6 +137,24 @@ const onSubmit = async () => {
 .signup-form .v-select,
 .signup-form .v-radio-group {
   margin-bottom: 20px;
+  border: none;
+}
+
+.signup-form .no-border .v-input__control {
+  border-bottom: none;
+}
+
+.signup-form .v-input__slot {
+  border: none;
+  background-color: transparent;
+}
+
+.signup-form .v-input__append-inner {
+  margin-right: 0;
+}
+
+.signup-form .v-input--hide-details .v-input__details {
+  display: none;
 }
 
 .signup-form .v-checkbox {
