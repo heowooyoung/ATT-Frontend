@@ -101,6 +101,7 @@ export default {
               this.chatBotMessage += sentence;
             });
             this.unityInstance.SendMessage('GameManager', 'VueEvent', this.chatBotMessage);
+            this.chatBotMessage = "";
           } else {
             console.warn(`Unexpected sceneNumber: ${this.sceneNumber}`);
           }
