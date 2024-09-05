@@ -23,9 +23,9 @@
         </div>
         <v-btn class="login-btn" type="submit">로그인</v-btn>
     </v-form>
-    <p class="signup-link">
-        계정이 있으신가요? <a href="/signup">계정생성</a>
-    </p>
+        <p class="signup-link">
+        계정이 있으신가요? <router-link to="/account/signup">계정생성</router-link>
+        </p>
     <div class="social-login-buttons">
         <v-img class="google-login-btn" block @click="goToGoogleLogin"></v-img>
         <v-img class="kakao-login-btn" block @click="goToKakaoLogin"></v-img>
