@@ -1,33 +1,18 @@
 <template>
-  <v-app-bar
-    app
-    class="custom-nav-bar"
-    flat
-    elevation="0"
-  >
-    <v-container class="nav-content-container">
-      <v-row align="center" justify="space-between">
-        <v-col cols="auto">
-          <v-btn @click="goToHome" class="transparent-btn" text>
-            <img
-              :src="require('@/assets/images/logo/if_logo.png')"
-              alt="IF 로고"
-              class="logo-image"
-            />
-          </v-btn>
-        </v-col>
-        <v-col cols="auto">
-          <v-btn text @click="goToPostPage" class="transparent-btn">
-            <v-icon left>mdi-forum</v-icon>
-            <span>익명 게시판</span>
-          </v-btn>
-          <v-btn v-if="!isAuthenticated" text @click="signIn" class="login-btn">
-            <v-icon left>mdi-login</v-icon>
-            <span>로그인</span>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
+  <v-navigation-drawer v-model="drawer" app temporary :width="70">
+    <v-list dense>
+      <v-list-item v-for="(item, index) in sidebarItems" :key="index" @click="item.action">
+        <v-list-item-icon>
+          <v-icon> {{ item.icon }}</v-icon>
+        </v-list-item-icon>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
+
+  <v-app-bar app flat dense>
+    <v-btn icon @click="toggleDrawer">
+      <v-icon>mdi-menu</v-icon>
+    </v-btn>
   </v-app-bar>
 </template>
 
@@ -38,36 +23,50 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'NavigationMenuBar',
+  data() {
+    return {
+      drawer: false,
+      sidebarItems: [
+        { icon: 'mdi-home', action: () => this.goToHomePage() },
+        { icon: 'mdi-forum', action: () => this.goToBoardList() },
+        { icon: this.isAuthenticated ? 'mdi-logout' : 'mdi-login', action: () => this.isAuthenticated ? this.requestLogoutToDjango() : this.signIn() }
+      ]
+    };
+  },
   computed: {
     ...mapState('authenticationModule', ['isAuthenticated'])
   },
   methods: {
     ...mapActions('authenticationModule', ['requestLogoutToDjango']),
-    goToHome() {
+    toggleDrawer() {
+      this.drawer = !this.drawer;
+    },
+    goToHomePage() {
       router.push('/')
     },
     signIn() {
       router.push('/account/login')
     },
-    goToPostPage() {
+    goToBoardList() {
       router.push('/board/list')
-    }
+    },
   },
 })
 </script>
 
 <style scoped>
-.custom-nav-bar {
-  background-color: white; /* 배경을 흰색으로 변경 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
-  border-bottom: 1px solid #e0e0e0; /* 하단에 얇은 경계선 추가 */
+.transparent-nav-bar {
+  background-color: transparent; 
+  box-shadow: none; 
+  border: none; 
+  padding: 0; 
 }
 
 .nav-content-container {
   width: 100%; 
   max-width: 1200px; 
   margin: 0 auto; 
-  padding: 0 20px; /* 패딩을 조금 줄임 */
+  padding: 0 115px; 
 }
 
 .transparent-btn {
@@ -76,24 +75,13 @@ export default defineComponent({
 }
 
 .transparent-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05); /* 배경색을 조금 어둡게 */
-}
-
-.login-btn {
-  color: white;
-  background-color: #4A90E2; /* 로그인 버튼 색상 */
-  border-radius: 4px;
-  padding: 8px 16px;
-}
-
-.login-btn:hover {
-  background-color: #357ABD; /* 로그인 버튼 호버 색상 */
+  background-color: #ADD8E6; 
 }
 
 .logo-image {
-  height: 50px; /* 로고 높이 조정 */
-  width: auto; /* 비율을 유지하면서 너비 조정 */
-  object-fit: contain;
+  height: 60px; 
+  width: 80px; 
+  object-fit: contain; 
   display: block;
 }
 </style>
