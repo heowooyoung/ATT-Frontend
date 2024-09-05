@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
     app
-    class="transparent-nav-bar"
+    class="custom-nav-bar"
     flat
     elevation="0"
   >
@@ -21,7 +21,7 @@
             <v-icon left>mdi-forum</v-icon>
             <span>익명 게시판</span>
           </v-btn>
-          <v-btn v-if="!isAuthenticated" text @click="signIn" class="transparent-btn">
+          <v-btn v-if="!isAuthenticated" text @click="signIn" class="login-btn">
             <v-icon left>mdi-login</v-icon>
             <span>로그인</span>
           </v-btn>
@@ -50,25 +50,24 @@ export default defineComponent({
       router.push('/account/login')
     },
     goToPostPage() {
-      router.push('/post/list')
+      router.push('/board/list')
     }
   },
 })
 </script>
 
 <style scoped>
-.transparent-nav-bar {
-  background-color: transparent; 
-  box-shadow: none; 
-  border: none; 
-  padding: 0; 
+.custom-nav-bar {
+  background-color: white; /* 배경을 흰색으로 변경 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+  border-bottom: 1px solid #e0e0e0; /* 하단에 얇은 경계선 추가 */
 }
 
 .nav-content-container {
   width: 100%; 
   max-width: 1200px; 
   margin: 0 auto; 
-  padding: 0 115px; 
+  padding: 0 20px; /* 패딩을 조금 줄임 */
 }
 
 .transparent-btn {
@@ -77,13 +76,24 @@ export default defineComponent({
 }
 
 .transparent-btn:hover {
-  background-color: #ADD8E6; 
+  background-color: rgba(0, 0, 0, 0.05); /* 배경색을 조금 어둡게 */
+}
+
+.login-btn {
+  color: white;
+  background-color: #4A90E2; /* 로그인 버튼 색상 */
+  border-radius: 4px;
+  padding: 8px 16px;
+}
+
+.login-btn:hover {
+  background-color: #357ABD; /* 로그인 버튼 호버 색상 */
 }
 
 .logo-image {
-  height: 60px; 
-  width: 80px; 
-  object-fit: contain; 
+  height: 50px; /* 로고 높이 조정 */
+  width: auto; /* 비율을 유지하면서 너비 조정 */
+  object-fit: contain;
   display: block;
 }
 </style>
