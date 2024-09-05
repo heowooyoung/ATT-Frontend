@@ -113,7 +113,8 @@ const onSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10vh;
+  margin-top: 2vh;
+  min-height: 2vh;
 }
 
 .signup-form {

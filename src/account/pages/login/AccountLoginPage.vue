@@ -77,7 +77,8 @@ console.log('Login with:', email.value, password.value)
 .login-container {
 display: flex;
 justify-content: center;
-margin-top: 10vh;
+margin-top: 2vh;
+min-height: 2vh;
 }
 
 .login-box {
