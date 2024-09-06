@@ -18,6 +18,7 @@ export default {
       userMessage: '',
       chatBotMessage: '',
       date: '',
+      dataQuestion: '',
       location: '',
       unityInstance: null,
       chatHistory: [],
@@ -27,7 +28,9 @@ export default {
   },
   methods: {
     // Chatbot Part
-    ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI','requestDateQuestionToFastAPI']),
+    ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI','requestDateQuestionToFastAPI',
+      'requestDateAnswerToFastAPI'
+    ]),
 
     // 무조건 일대일 대응 채팅
     async sendMessageToChatBot() {
@@ -52,14 +55,13 @@ export default {
             // 응답이 성공적이라면 response에 결과 저장
             response = potentialResponse;
             this.chatBotOutput = response.generatedText; // 챗봇 응답 저장
-            console.log('ENFP 응답: ', this.chatBotOutput.toString().trim());
+            console.log('ENFP 응답: ', this.chatBotOutput);
            
             // 요일 정보가 메세지에 들어있다면, 질문을 던짐
             if (this.chatBotOutput.toString().trim().includes("요일")) {
-              console.log('요일 받아오기')
-              this.date = await this.requestDateQuestionToFastAPI({ "data": this.userInputMessage});
+              const question = this.chatBotOutput
+              this.sendQnAToChatBot(question)
             }
-
             this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
             this.chatHistory.push({ sender: '이상형', text: this.chatBotOutput });
             this.chatBotOutput = ''; // 응답 저장소 초기화
@@ -69,6 +71,36 @@ export default {
         } catch (error) {
           console.error("응답을 기다리는 중 오류가 발생했습니다:", error);
           // 오류가 발생해도 무조건 다시 시도하도록 설정
+        }
+        // 비동기 함수 호출 사이에 지연 시간을 두어 서버에 과부하를 줄 수 있는 빠른 루프 방지
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 1초 대기
+      }
+    },
+
+    async sendQnAToChatBot(question) {
+      console.log('요일', question)
+      this.dateQuestion = [question.join(' ')]
+      await this.requestDateQuestionToFastAPI({ "data": this.dateQuestion});
+      let response = null;
+      
+      while (!response) {
+        try {
+          // 응답이 성공적으로 올 때까지 계속 요청
+          const potentialResponse = await this.requestDateAnswerToFastAPI();
+          
+          if (potentialResponse && potentialResponse.generatedText) {
+            response = potentialResponse;
+            this.date = response.generatedText; // 챗봇 응답 저장
+            console.log('약속 날짜: ', this.date);
+           
+            // this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
+            //this.chatHistory.push({ sender: '이상형', text: this.chatBotOutput });
+            this.date = ''; // 응답 저장소 초기화
+          } else {
+            console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
+          }
+        } catch (error) {
+          console.error("답변을 기다리는 중 오류가 발생했습니다:", error);
         }
         // 비동기 함수 호출 사이에 지연 시간을 두어 서버에 과부하를 줄 수 있는 빠른 루프 방지
         await new Promise(resolve => setTimeout(resolve, 2000)); // 1초 대기
