@@ -8,6 +8,9 @@ export type UserInputActions = {
         context: ActionContext<UserInputState, any>,
         payload: { data: string }): Promise<string>
     requestAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
+    requestDateQuestionToFastAPI(
+        context: ActionContext<UserInputState, any>,
+        payload: {data: string}): Promise<string>
 }
 
 const actions: UserInputActions = {
@@ -42,7 +45,25 @@ const actions: UserInputActions = {
             console.log('requestAnswerToFastAPI() 중 문제 발생:', error)
             throw error
         }
-    }
+    },
+    async requestDateQuestionToFastAPI(
+        context: ActionContext<UserInputState, any>,
+        payload: {data: string}): Promise<string> {
+            try {
+                console.log('sendDateQuestionToFastAPI()')
+                const { data } = payload
+                console.log("userInput:", data)
+                const command = 12 // 12 : date question command 
+    
+                const response = await axiosInst.fastapiAxiosInst.post(
+                    '/request-ai-command', { command, "data": [data] })
+                return response.data
+            } catch (error) {
+                // Axios time out 나는 이슈 발생 (2500ms) 수정하기
+                console.log('sendDateQuestionToFastAPI() 중 문제 발생:', error)
+                throw error
+            }
+    },
 }
 
 export default actions
