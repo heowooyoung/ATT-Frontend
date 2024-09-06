@@ -17,6 +17,8 @@ export default {
     return {
       userMessage: '',
       chatBotMessage: '',
+      date: '',
+      location: '',
       unityInstance: null,
       chatHistory: [],
       messageList: [],
@@ -25,7 +27,7 @@ export default {
   },
   methods: {
     // Chatbot Part
-    ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI']),
+    ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI','requestDateQuestionToFastAPI']),
 
     // 무조건 일대일 대응 채팅
     async sendMessageToChatBot() {
@@ -37,10 +39,10 @@ export default {
       console.log("sendMessageToChatBot message:", this.userInputMessage);
 
       // `sendMessageToFastAPI`의 결과를 기다림
-      let res = await this.sendMessageToFastAPI({ "data": this.userInputMessage });
+      await this.sendMessageToFastAPI({ "data": this.userInputMessage });
 
       let response = null;
-      // 응답이 올 때까지 무조건 기다리는 부분
+      // 응답이 올 때까지 무조건 기다리는 부분 => polling 
       while (!response) {
         try {
           // 응답이 성공적으로 올 때까지 계속 요청
@@ -50,9 +52,15 @@ export default {
             // 응답이 성공적이라면 response에 결과 저장
             response = potentialResponse;
             this.chatBotOutput = response.generatedText; // 챗봇 응답 저장
-            console.log('ENFP 응답: ', this.chatBotOutput);
-            this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
+            console.log('ENFP 응답: ', this.chatBotOutput.toString().trim());
+           
+            // 요일 정보가 메세지에 들어있다면, 질문을 던짐
+            if (this.chatBotOutput.toString().trim().includes("요일")) {
+              console.log('요일 받아오기')
+              this.date = await this.requestDateQuestionToFastAPI({ "data": this.userInputMessage});
+            }
 
+            this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
             this.chatHistory.push({ sender: '이상형', text: this.chatBotOutput });
             this.chatBotOutput = ''; // 응답 저장소 초기화
           } else {
