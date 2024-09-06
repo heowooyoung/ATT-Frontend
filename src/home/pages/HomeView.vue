@@ -1,33 +1,31 @@
 <template>
-  <v-container fluid class="main-container">
-    <div class="content-container">
-      <div class="overlay-section">
-        <div class="title-section">
-          <h1 class="title">AI로 시작하는</h1>
-          <p class="subtitle">소개팅 연애 시뮬레이션 게임, IF</p>
-        </div>
-        <v-row class="button-group">
-          <v-btn color="primary" class="btn_basic" @click="goToGamePage">
-            AI 이상형과 대화 시작하기
-          </v-btn>
-          <v-btn v-if="isAdmin" color="primary" class="btn_basic" @click="goToManager">
-            IF 관리자 페이지
-          </v-btn>
-        </v-row>
-      </div>
-      <div class="image-section">
-        <div class="ani_clip_action">
-          <img :src="require('@/assets/images/talk/img-key-slide01-removebg-preview.png')" class="main-image img1" alt="채팅1">
-          <img :src="require('@/assets/images/talk/img-key-slide02-removebg-preview.png')" class="main-image img2" alt="채팅2">
-          <img :src="require('@/assets/images/talk/img-key-slide03-removebg-preview.png')" class="main-image img3" alt="채팅3">
-          <img :src="require('@/assets/images/talk/img-key-slide04-removebg-preview.png')" class="main-image img4" alt="채팅4">
-          <img :src="require('@/assets/images/talk/img-key-slide05-removebg-preview.png')" class="main-image img5" alt="채팅5">
-          <img :src="require('@/assets/images/talk/img-key-slide06-removebg-preview.png')" class="main-image img6" alt="채팅6">
-          <img :src="require('@/assets/images/talk/img-key-slide07-removebg-preview.png')" class="main-image img7" alt="채팅7">
+  <div class="background-container">
+    <v-container fluid class="main-container">
+      <div class="content-container">
+        <div class="overlay-section">
+          <div class="title-section">
+            <h1 class="title">AI로 시작하는</h1>
+            <p class="subtitle">소개팅 연애 시뮬레이션 게임, IF</p>
+          </div>
+          <v-row class="button-group">
+            <v-btn class="btn_basic main-btn" @click="goToGamePage">
+              AI 이상형과 대화 시작하기
+            </v-btn>
+            <v-btn v-if="isAdmin" color="primary" class="btn_basic admin-btn" @click="goToManager">
+              IF 관리자 페이지
+            </v-btn>
+          </v-row>
+          <v-row>
+            <div class="image-section">
+              <div class="ani_clip_action">
+                <img v-for="n in 7" :key="n" :src="require(`@/assets/images/talk/talk${n}.png`)" :class="['main-image', `img${n}`]" :alt="`채팅${n}`">
+              </div>
+            </div>
+          </v-row>
         </div>
       </div>
-    </div>
-  </v-container>
+    </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -48,131 +46,127 @@ export default defineComponent({
     },
   },
   computed: {
-      ...mapState(authenticationModule, ["isAuthenticated", "isAdmin"]),
-    },
+    ...mapState(authenticationModule, ["isAuthenticated", "isAdmin"]),
+  },
 });
 </script>
 
 <style scoped>
-html, body {
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  box-sizing: border-box;
-  font-family: 'LINESeed';
-  font-feature-settings: "clig" off, "liga" off;
-  color: #000;
-  -webkit-font-smoothing: antialiased;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
+.background-container {
+  background-image: url('@/assets/images/fixed/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .main-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 10vh;
+  border-radius: 20px;
+  padding: 20px;
 }
 
 .content-container {
   display: flex;
-  flex-direction: row;
-  width: 80%;
+  flex-direction: column;
+  align-items: center;
   max-width: 1200px;
-  height: 60vh;
+  margin: 0 auto;
 }
 
 .title-section {
-  position: relative;
-  z-index: 2;
-  text-align: left;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .title {
-  font-family: 'LINESeed';
+  font-family: 'LINESeed', sans-serif;
   font-size: 64px;
   font-weight: bold;
   margin-bottom: 10px;
   line-height: 1.2;
-  color: black;
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .subtitle {
-  font-family: 'LINESeed';
-  font-size: 38px;
-  color: black;
+  font-family: 'LINESeed', sans-serif;
+  font-size: 32px;
+  color: #555;
   line-height: 1.2;
   margin-top: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .button-group {
-  margin-top: 20px;
-  gap: 10px;
+  margin-top: 30px;
+  gap: 20px;
   display: flex;
-  flex-wrap: wrap;
-}
-
-.btn_basic, .btn_outlined {
-  font-family: 'LINESeed';
-  font-size: 18px;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 8px;
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-width: 200px;
-  height: 50px;
 }
 
 .btn_basic {
-  background-color: #1E90FF;
+  font-family: 'LINESeed';
+  font-weight: 700;
+  border-radius: 8px;
+  background-color:#54a1e4;
   color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease-out;
-}
-
-.btn_basic:hover {
-  background-color: #4682B4;
-}
-
-.btn_outlined {
-  border: 2px solid #1E90FF;
-  color: #1E90FF;
-  background-color: transparent;
-  transition: background-color 0.2s ease-out, color 0.2s ease-out;
-}
-
-.btn_outlined:hover {
-  background-color: #1E90FF;
-  color: white;
-}
-
-.image-section {
-  flex: 1;
+  transition: all 0.3s ease;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-btn {
+  font-size: 22px;
+  padding: 18px 36px;
+  min-width: 350px;
+  height: 50px;
+}
+
+.admin-btn {
+  font-size: 18px;
+  padding: 14px 28px;
+  min-width: 250px;
+  height: 60px;
+}
+
+.btn_basic:hover {
+  background-color:#54a1e4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.image-section {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 30px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ani_clip_action {
   position: relative;
-  width: 379px;
-  height: 658px;
-  margin: 0 auto;
-  padding-top: 20px;
+  width: 600px;
+  height: 300px;
 }
 
-.img1, .img2, .img3, .img4, .img5, .img6, .img7 {
+.main-image {
   position: absolute;
-  width: 379px;
-  height: 658px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   opacity: 0;
   transition: opacity 1s ease-in-out;
 }
 
-.img1 { opacity: 1; } 
+.img1 { opacity: 1; }
 .img2 { animation: fadeIn 1s forwards 2s; }
 .img3 { animation: fadeIn 1s forwards 4s; }
 .img4 { animation: fadeIn 1s forwards 6s; }
@@ -185,8 +179,30 @@ html, body {
   to { opacity: 1; }
 }
 
-.main-image {
-  max-width: 100%;
-  height: auto;
+@media (max-width: 960px) {
+  .title {
+    font-size: 48px;
+  }
+
+  .subtitle {
+    font-size: 24px;
+  }
+
+  .main-btn {
+    font-size: 20px;
+    min-width: 300px;
+    height: 60px;
+  }
+
+  .admin-btn {
+    font-size: 16px;
+    min-width: 200px;
+    height: 50px;
+  }
+
+  .ani_clip_action {
+    width: 100%;
+    height: 250px;
+  }
 }
 </style>
