@@ -7,14 +7,11 @@
           <p class="subtitle">소개팅 연애 시뮬레이션 게임, IF</p>
         </div>
         <v-row class="button-group">
-          <v-btn color="primary" class="btn_basic" @click="goToManager">
-            IF 관리자(관리자용)
-          </v-btn>
           <v-btn color="primary" class="btn_basic" @click="goToGamePage">
-            IF 사용자(사용자용)
+            AI 이상형과 대화 시작하기
           </v-btn>
-          <v-btn outlined class="btn_outlined" @click="learnMore">
-            서비스 소개서
+          <v-btn v-if="isAdmin" color="primary" class="btn_basic" @click="goToManager">
+            IF 관리자 페이지
           </v-btn>
         </v-row>
       </div>
@@ -36,6 +33,8 @@
 <script lang="ts">
 import router from '@/router';
 import { defineComponent } from 'vue';
+import { mapState } from "vuex";
+const authenticationModule = "authenticationModule";
 
 export default defineComponent({
   name: 'HomeView',
@@ -44,9 +43,13 @@ export default defineComponent({
       router.push('/manager')
     },
     goToGamePage() {
-      router.push('/game-page')
+      if (this.isAuthenticated) { router.push('/game-page') }
+      else { router.push('/account/login')}
     },
   },
+  computed: {
+      ...mapState(authenticationModule, ["isAuthenticated", "isAdmin"]),
+    },
 });
 </script>
 
@@ -56,7 +59,7 @@ html, body {
   padding: 0;
   line-height: 1;
   box-sizing: border-box;
-  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'LINESeed';
   font-feature-settings: "clig" off, "liga" off;
   color: #000;
   -webkit-font-smoothing: antialiased;
@@ -86,7 +89,7 @@ html, body {
 }
 
 .title {
-  font-family: 'Arial', sans-serif;
+  font-family: 'LINESeed';
   font-size: 64px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -95,7 +98,7 @@ html, body {
 }
 
 .subtitle {
-  font-family: 'Arial', sans-serif;
+  font-family: 'LINESeed';
   font-size: 38px;
   color: black;
   line-height: 1.2;
@@ -110,6 +113,7 @@ html, body {
 }
 
 .btn_basic, .btn_outlined {
+  font-family: 'LINESeed';
   font-size: 18px;
   font-weight: 700;
   padding: 12px 24px;
