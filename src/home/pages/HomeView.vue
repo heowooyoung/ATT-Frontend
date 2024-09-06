@@ -59,7 +59,7 @@ html, body {
   padding: 0;
   line-height: 1;
   box-sizing: border-box;
-  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'LINESeed';
   font-feature-settings: "clig" off, "liga" off;
   color: #000;
   -webkit-font-smoothing: antialiased;
@@ -89,7 +89,7 @@ html, body {
 }
 
 .title {
-  font-family: 'Arial', sans-serif;
+  font-family: 'LINESeed';
   font-size: 64px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -98,7 +98,7 @@ html, body {
 }
 
 .subtitle {
-  font-family: 'Arial', sans-serif;
+  font-family: 'LINESeed';
   font-size: 38px;
   color: black;
   line-height: 1.2;
@@ -113,6 +113,7 @@ html, body {
 }
 
 .btn_basic, .btn_outlined {
+  font-family: 'LINESeed';
   font-size: 18px;
   font-weight: 700;
   padding: 12px 24px;
