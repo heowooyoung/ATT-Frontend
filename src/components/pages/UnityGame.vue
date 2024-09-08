@@ -18,7 +18,7 @@ export default {
       userMessage: '',
       chatBotMessage: '',
       date: '',
-      dataQuestion: '',
+      dateQuestion: '',
       location: '',
       unityInstance: null,
       chatHistory: [],
@@ -36,7 +36,7 @@ export default {
     async sendMessageToChatBot() {
       if (this.userMessage.trim() === "") return; // 아무 것도 안 보냈다면 처리하지 않음
       // Unity에서 받은 메시지를 대화 기록에 추가
-      this.chatHistory.push({ sender: "나", text: this.userMessage });
+      this.chatHistory.push({ role: "user", content: this.userMessage }); // gpt 형식에 맞게 변경
       this.userInputMessage = this.userMessage;
       this.userMessage = ""; // 메시지를 보낸 후 초기화
       console.log("sendMessageToChatBot message:", this.userInputMessage);
@@ -56,14 +56,15 @@ export default {
             response = potentialResponse;
             this.chatBotOutput = response.generatedText; // 챗봇 응답 저장
             console.log('ENFP 응답: ', this.chatBotOutput);
+            this.chatHistory.push({ role: 'assistant', content: this.chatBotOutput[0] }); // gpt 형식에 맞게 변경
            
             // 요일 정보가 메세지에 들어있다면, 질문을 던짐
             if (this.chatBotOutput.toString().trim().includes("요일")) {
-              const question = this.chatBotOutput
+              //const question = this.chatBotOutput
+              const question = this.chatHistory
               this.sendQnAToChatBot(question)
             }
             this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
-            this.chatHistory.push({ sender: '이상형', text: this.chatBotOutput });
             this.chatBotOutput = ''; // 응답 저장소 초기화
           } else {
             console.log('응답이 아직 준비되지 않았습니다, 다시 시도합니다...');
@@ -79,7 +80,9 @@ export default {
 
     async sendQnAToChatBot(question) {
       console.log('요일', question)
-      this.dateQuestion = [question.join(' ')]
+      //this.dateQuestion = [question.join(' ')]
+      this.dateQuestion = [question]
+      console.log('dateQuestion', this.dateQuestion)
       await this.requestDateQuestionToFastAPI({ "data": this.dateQuestion});
       let response = null;
       
