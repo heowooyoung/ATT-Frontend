@@ -20,6 +20,7 @@ export default {
       date: '',
       dateQuestion: '',
       location: '',
+      locationQuestion: '',
       unityInstance: null,
       chatHistory: [],
       messageList: [],
@@ -29,7 +30,7 @@ export default {
   methods: {
     // Chatbot Part
     ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI','requestDateQuestionToFastAPI',
-      'requestDateAnswerToFastAPI'
+      'requestDateAnswerToFastAPI','requestLocationQuestionToFastAPI','requestLocationAnswerToFastAPI'
     ]),
 
     // 무조건 일대일 대응 채팅
@@ -38,6 +39,11 @@ export default {
       // Unity에서 받은 메시지를 대화 기록에 추가
       this.chatHistory.push({ role: "user", content: this.userMessage }); // gpt 형식에 맞게 변경
       this.userInputMessage = this.userMessage;
+      // 내가 어디서 만날지 물어볼때 장소 QnA 진행
+      if (this.userMessage.toString().trim().includes("어디")) {
+              const question = this.chatHistory
+              this.sendLocationQnAToChatBot(question)
+      }
       this.userMessage = ""; // 메시지를 보낸 후 초기화
       console.log("sendMessageToChatBot message:", this.userInputMessage);
 
@@ -60,9 +66,13 @@ export default {
            
             // 요일 정보가 메세지에 들어있다면, 질문을 던짐
             if (this.chatBotOutput.toString().trim().includes("요일")) {
-              //const question = this.chatBotOutput
               const question = this.chatHistory
-              this.sendQnAToChatBot(question)
+              this.sendDateQnAToChatBot(question)
+            }
+            // 장소 정보가 메세지에 들어있다면, 질문을 던짐
+            if (this.chatBotOutput.toString().trim().includes("어디")) {
+              const question = this.chatHistory
+              this.sendLocationQnAToChatBot(question)
             }
             this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
             this.chatBotOutput = ''; // 응답 저장소 초기화
@@ -77,10 +87,9 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 2000)); // 1초 대기
       }
     },
-
-    async sendQnAToChatBot(question) {
+    // 날짜 QnA
+    async sendDateQnAToChatBot(question) {
       console.log('요일', question)
-      //this.dateQuestion = [question.join(' ')]
       this.dateQuestion = [question]
       console.log('dateQuestion', this.dateQuestion)
       await this.requestDateQuestionToFastAPI({ "data": this.dateQuestion});
@@ -88,7 +97,6 @@ export default {
       
       while (!response) {
         try {
-          // 응답이 성공적으로 올 때까지 계속 요청
           const potentialResponse = await this.requestDateAnswerToFastAPI();
           
           if (potentialResponse && potentialResponse.generatedText) {
@@ -104,8 +112,35 @@ export default {
         } catch (error) {
           console.error("답변을 기다리는 중 오류가 발생했습니다:", error);
         }
-        // 비동기 함수 호출 사이에 지연 시간을 두어 서버에 과부하를 줄 수 있는 빠른 루프 방지
-        await new Promise(resolve => setTimeout(resolve, 2000)); // 1초 대기
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2초 대기
+      }
+    },
+    // 장소 QnA
+    async sendLocationQnAToChatBot(question) {
+      console.log('장소', question)
+      this.locationQuestion = [question]
+      console.log('locationQuestion', this.locationQuestion)
+      await this.requestLocationQuestionToFastAPI({ "data": this.locationQuestion});
+      let response = null;
+      
+      while (!response) {
+        try {
+          const potentialResponse = await this.requestLocationAnswerToFastAPI();
+          
+          if (potentialResponse && potentialResponse.generatedText) {
+            response = potentialResponse;
+            this.date = response.generatedText; // 챗봇 응답 저장
+            console.log('약속 장소: ', this.location);
+            console.log('value', this.location[0])
+            this.sendMeetingDateToUnity(this.location[0]);
+            this.date = ''; // 응답 저장소 초기화
+          } else {
+            console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
+          }
+        } catch (error) {
+          console.error("답변을 기다리는 중 오류가 발생했습니다:", error);
+        }
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2초 대기
       }
     },
 

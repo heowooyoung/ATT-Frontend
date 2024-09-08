@@ -12,6 +12,10 @@ export type UserInputActions = {
         context: ActionContext<UserInputState, any>,
         payload: {data: string}): Promise<string>
     requestDateAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
+    requestLocationQuestionToFastAPI(
+        context: ActionContext<UserInputState, any>,
+        payload: {data: string}): Promise<string>
+    requestLocationAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
 }
 
 const actions: UserInputActions = {
@@ -60,7 +64,6 @@ const actions: UserInputActions = {
                 console.log("날짜받기 응답", response.data)
                 return response.data
             } catch (error) {
-                // Axios time out 나는 이슈 발생 (2500ms) 수정하기
                 console.log('sendDateQuestionToFastAPI() 중 문제 발생:', error)
                 throw error
             }
@@ -76,8 +79,37 @@ const actions: UserInputActions = {
             console.log('requestDateAnswerToFastAPI() 중 문제 발생:', error)
             throw error
         }
-    }
+    },
+    async requestLocationQuestionToFastAPI(
+        context: ActionContext<UserInputState, any>,
+        payload: {data: string}): Promise<string> {
+            try {
+                console.log('sendLocationQuestionToFastAPI()')
+                const { data } = payload
+                const command = 23 // 23 : location question command 
+    
+                const response = await axiosInst.fastapiAxiosInst.post(
+                    '/request-ai-command', { command, "data": data })
+                console.log("장소받기 응답", response.data)
+                return response.data
+            } catch (error) {
+                console.log('sendLocationQuestionToFastAPI() 중 문제 발생:', error)
+                throw error
+            }
+    },
 
+    async requestLocationAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string> {
+        try {
+            console.log('requestLocationAnswerToFastAPI()')
+            const response = await axiosInst.fastapiAxiosInst.post(
+                '/location-qna-result')
+            console.log('Location Answer: ', response.data)
+            return response.data
+        } catch (error) {
+            console.log('requestLocationAnswerToFastAPI() 중 문제 발생:', error)
+            throw error
+        }
+    }
 }
 
 export default actions
