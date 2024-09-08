@@ -132,7 +132,7 @@ export default {
             this.location = response.generatedText; // 챗봇 응답 저장
             console.log('약속 장소: ', this.location);
             console.log('value', this.location[0])
-            this.sendMeetingDateToUnity(this.location[0]);
+            this.sendMeetingLocationToUnity(this.location[0]);
             this.location = ''; // 응답 저장소 초기화
           } else {
             console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
@@ -193,6 +193,14 @@ export default {
       {
         this.unityInstance.SendMessage('GameManager', 'DateEvent', date);
         console.log("this.date", date);
+      }
+    },
+    sendMeetingLocationToUnity(place)  // 약속 장소 데이터 전송
+    {
+      if (this.unityInstance)
+      {
+        this.unityInstance.SendMessage('GameManager', 'PlaceEvent', place);
+        console.log("this.place", place);
       }
     },
     resizeUnityCanvas() {
