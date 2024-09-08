@@ -7,7 +7,6 @@ import AccountRoutes from '@/account/router/AccountRoutes'
 import KakaoAuthenticationRoutes from '@/kakaoAuthentication/router/KakaoAuthenticationRoutes'
 import UnitytRoutes from '@/components/router/UnityPageRoutes'
 import GatherEverythingRoutes from '@/gatherEverything/router/GatherEverythingRoutes'
-import IstpChatbotRoutes from '@/chatBot/router/IstpChatBotRoutes'
 // import FileS3TestRoutes from '@/fileS3/router/FileS3TestRoutes'
 
 
@@ -21,7 +20,6 @@ const routes: Array<RouteRecordRaw> = [
   // ...FileS3TestRoutes,
   ...UnitytRoutes,
   ...GatherEverythingRoutes,
-  ...IstpChatbotRoutes,
 ]
 
 const router = createRouter({
