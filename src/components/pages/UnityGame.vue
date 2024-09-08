@@ -92,9 +92,8 @@ export default {
             response = potentialResponse;
             this.date = response.generatedText; // 챗봇 응답 저장
             console.log('약속 날짜: ', this.date);
-           
-            // this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
-            //this.chatHistory.push({ sender: '이상형', text: this.chatBotOutput });
+            console.log('value', this.date[0])
+            this.sendMeetingDateToUnity(this.date[0]);
             this.date = ''; // 응답 저장소 초기화
           } else {
             console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
@@ -148,6 +147,14 @@ export default {
         } 
         else {
           console.error("Unity instance is not ready.");
+      }
+    },
+    sendMeetingDateToUnity(date)  // 약속 날짜 데이터 전송
+    {
+      if (this.unityInstance)
+      {
+        this.unityInstance.SendMessage('GameManager', 'DateEvent', date);
+        console.log("this.date", date);
       }
     },
     resizeUnityCanvas() {
