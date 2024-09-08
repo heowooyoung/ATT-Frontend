@@ -39,11 +39,12 @@ export default {
       // Unity에서 받은 메시지를 대화 기록에 추가
       this.chatHistory.push({ role: "user", content: this.userMessage }); // gpt 형식에 맞게 변경
       this.userInputMessage = this.userMessage;
+
       // 내가 어디서 만날지 물어볼때 장소 QnA 진행
-      if (this.userMessage.toString().trim().includes("어디")) {
-              const question = this.chatHistory
-              this.sendLocationQnAToChatBot(question)
-      }
+      // if (this.userMessage.toString().trim().includes("어디")) {
+      //         const question = this.chatHistory
+      //         this.sendLocationQnAToChatBot(question)
+      // }
       this.userMessage = ""; // 메시지를 보낸 후 초기화
       console.log("sendMessageToChatBot message:", this.userInputMessage);
 
@@ -97,10 +98,10 @@ export default {
       
       while (!response) {
         try {
-          const potentialResponse = await this.requestDateAnswerToFastAPI();
+          const DateResponse = await this.requestDateAnswerToFastAPI();
           
-          if (potentialResponse && potentialResponse.generatedText) {
-            response = potentialResponse;
+          if (DateResponse && DateResponse.generatedText) {
+            response = DateResponse;
             this.date = response.generatedText; // 챗봇 응답 저장
             console.log('약속 날짜: ', this.date);
             console.log('value', this.date[0])
@@ -119,21 +120,20 @@ export default {
     async sendLocationQnAToChatBot(question) {
       console.log('장소', question)
       this.locationQuestion = [question]
-      console.log('locationQuestion', this.locationQuestion)
       await this.requestLocationQuestionToFastAPI({ "data": this.locationQuestion});
       let response = null;
       
       while (!response) {
         try {
-          const potentialResponse = await this.requestLocationAnswerToFastAPI();
+          const LocationResponse = await this.requestLocationAnswerToFastAPI();
           
-          if (potentialResponse && potentialResponse.generatedText) {
-            response = potentialResponse;
-            this.date = response.generatedText; // 챗봇 응답 저장
+          if (LocationResponse && LocationResponse.generatedText) {
+            response = LocationResponse;
+            this.location = response.generatedText; // 챗봇 응답 저장
             console.log('약속 장소: ', this.location);
             console.log('value', this.location[0])
             this.sendMeetingDateToUnity(this.location[0]);
-            this.date = ''; // 응답 저장소 초기화
+            this.location = ''; // 응답 저장소 초기화
           } else {
             console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
           }
