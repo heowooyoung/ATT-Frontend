@@ -5,6 +5,7 @@ import NaverAccountRegisterPage from "@/account/pages/register/NaverAccountRegis
 import AccountMyPage from "@/account/pages/my/AccountMyPage.vue"
 import AccountSignUpPage from "@/account/pages/singup/AccountSignUpPage.vue"
 import ManagerView from "@/account/pages/admin/ManagerView.vue"
+import ForgotPasswordPage from "@/account/pages/find/ForgotPasswordPage.vue"
 
 const AccountRoutes = [
     {
@@ -42,6 +43,11 @@ const AccountRoutes = [
         name: 'manager',
         component: ManagerView
     },
+    {
+        path: '/account/forgot-password',
+        name: 'ForgotPassword',
+        component: ForgotPasswordPage,
+      },
 ]
 
 export default AccountRoutes
