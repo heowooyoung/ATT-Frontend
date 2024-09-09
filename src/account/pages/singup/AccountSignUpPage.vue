@@ -2,10 +2,9 @@
   <v-container class="signup-container">
     <v-form @submit.prevent="onSubmit" class="signup-form">
       <h1>회원가입</h1>
-      <v-text-field v-model="user.id" label="아이디" hide-details class="no-border" required></v-text-field>
+      <v-text-field v-model="user.email" label="이메일" type="email" hide-details class="no-border"></v-text-field>
       <v-text-field v-model="user.password" label="비밀번호" type="password" hide-details class="no-border" required></v-text-field>
-      <v-text-field v-model="user.passwordConfirm" label="비밀번호 확인" type="password" hide-detailsclass="no-border" required></v-text-field>
-      <v-text-field v-model="user.email" label="[선택] 이메일주소 (비밀번호 찾기 등 본인 확인용)" type="email" hide-details class="no-border"></v-text-field>
+      <v-text-field v-model="user.passwordConfirm" label="비밀번호 확인" type="password" hide-details class="no-border" required></v-text-field>
       <v-text-field v-model="user.name" label="이름" hide-details class="no-border" required></v-text-field>
       <v-text-field v-model="user.nickname" label="닉네임" hide-details class="no-border" required></v-text-field>
       <v-select v-model="user.mbti" :items="mbtiOptions" label="MBTI" hide-details class="no-border" required></v-select>
@@ -20,11 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const user = reactive({
-  id: '',
   password: '',
   passwordConfirm: '',
   email: '',
@@ -35,26 +36,58 @@ const user = reactive({
 });
 
 const isAgreeChecked = ref(false);
+const mbtiOptions = ref<string[]>([]);
 
-const mbtiOptions = [
-  'INTJ', 'INTP', 'ENTJ', 'ENTP',
-  'INFJ', 'INFP', 'ENFJ', 'ENFP',
-  'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ',
-  'ISTP', 'ISFP', 'ESTP', 'ESFP'
-];
+const checkEmailDuplicate = async (): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/api/check-email/`, {
+      email: user.email,
+    });
+    return response.data.is_duplicate;
+  } catch (error) {
+    console.error('Failed to check email duplication:', error);
+    return false;
+  }
+};
+
+const checkNicknameDuplicate = async (): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/api/check-nickname/`, {
+      nickname: user.nickname,
+    });
+    return response.data.is_duplicate;
+  } catch (error) {
+    console.error('Failed to check nickname duplication:', error);
+    return false;
+  }
+};
 
 const onSubmit = async () => {
-  if (isAgreeChecked.value && user.id && user.password && user.password === user.passwordConfirm) {
+  if (isAgreeChecked.value && user.email && user.password && user.password === user.passwordConfirm) {
+    const isEmailDuplicate = await checkEmailDuplicate();
+    if (isEmailDuplicate) {
+      alert('이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.');
+      return;
+    }
+
+    const isNicknameDuplicate = await checkNicknameDuplicate();
+    if (isNicknameDuplicate) {
+      alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.');
+      return;
+    }
+
     try {
-      await axios.post('http://127.0.0.1:8000/api/register/', {
+      await axios.post(`${process.env.VUE_APP_BASE_URL}/api/register/`, {
         email: user.email,
         password: user.password,
         name: user.name,
         nickname: user.nickname,
         mbti: user.mbti,
-        gender: user.gender
+        gender: user.gender,
       });
-      alert('회원가입 성공!');
+
+      alert('회원가입이 성공적으로 처리되었습니다!');
+      await router.push('/account/login');
     } catch (error) {
       console.error('Registration failed:', error);
       alert('회원가입 실패');
@@ -63,6 +96,17 @@ const onSubmit = async () => {
     alert('모든 필수 입력 항목을 작성하고 약관에 동의해주세요.');
   }
 };
+
+const fetchMbtiOptions = async () => {
+  try {
+    const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/api/mbti-options/`);
+    mbtiOptions.value = response.data.mbti_options;
+  } catch (error) {
+    console.error('Failed to fetch MBTI options:', error);
+  }
+};
+
+onMounted(fetchMbtiOptions);
 </script>
 
 <style scoped>
@@ -70,8 +114,7 @@ const onSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2vh;
-  min-height: 2vh;
+  min-height: 100vh;
 }
 
 .signup-form {
