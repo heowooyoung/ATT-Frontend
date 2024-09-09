@@ -6,6 +6,7 @@ import AccountMyPage from "@/account/pages/my/AccountMyPage.vue"
 import AccountSignUpPage from "@/account/pages/singup/AccountSignUpPage.vue"
 import ManagerView from "@/account/pages/admin/ManagerView.vue"
 import ForgotPasswordPage from "@/account/pages/find/ForgotPasswordPage.vue"
+import ForgotEmailPage from "@/account/pages/find/ForgotEmailPage.vue"
 
 const AccountRoutes = [
     {
@@ -47,6 +48,11 @@ const AccountRoutes = [
         path: '/account/forgot-password',
         name: 'ForgotPassword',
         component: ForgotPasswordPage,
+      },
+      {
+        path: '/account/forgot-email',
+        name: 'ForgotEmail',
+        component: ForgotEmailPage,
       },
 ]
 
