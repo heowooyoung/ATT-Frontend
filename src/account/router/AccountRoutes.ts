@@ -4,6 +4,7 @@ import KakaoAccountRegisterPage from "@/account/pages/register/KakaoAccountRegis
 import NaverAccountRegisterPage from "@/account/pages/register/NaverAccountRegisterPage.vue"
 import AccountMyPage from "@/account/pages/my/AccountMyPage.vue"
 import AccountSignUpPage from "@/account/pages/singup/AccountSignUpPage.vue"
+import ManagerView from "@/account/pages/admin/ManagerView.vue"
 
 const AccountRoutes = [
     {
@@ -35,6 +36,11 @@ const AccountRoutes = [
         path: '/account/signup',
         name: 'AccountSignUpPage',
         component: AccountSignUpPage
+    },
+    {
+        path: '/manager',
+        name: 'manager',
+        component: ManagerView
     },
 ]
 
