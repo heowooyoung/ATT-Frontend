@@ -10,11 +10,11 @@ export type UserInputActions = {
     requestAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
     requestDateQuestionToFastAPI(
         context: ActionContext<UserInputState, any>,
-        payload: {data: string}): Promise<string>
+        payload: { data: string }): Promise<string>
     requestDateAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
     requestLocationQuestionToFastAPI(
         context: ActionContext<UserInputState, any>,
-        payload: {data: string}): Promise<string>
+        payload: { data: string }): Promise<string>
     requestLocationAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
 }
 
@@ -28,7 +28,7 @@ const actions: UserInputActions = {
             console.log('sendMessageToFastAPI()')
             const { data } = payload
             console.log("userInput:", data)
-            const command = 8 // 7 : istp,   8 : enfp
+            const command = 7 // 7 : istp,   8 : enfp
 
             const response = await axiosInst.fastapiAxiosInst.post(
                 '/request-ai-command', { command, "data": [data] })
@@ -43,7 +43,7 @@ const actions: UserInputActions = {
         try {
             console.log('requestAnswerToFastAPI()')
             const response = await axiosInst.fastapiAxiosInst.post(
-                '/enfp-test-result')
+                '/istp-test-result')
             console.log('actions ENFP Answer: ', response.data)
             return response.data
         } catch (error) {
@@ -53,20 +53,20 @@ const actions: UserInputActions = {
     },
     async requestDateQuestionToFastAPI(
         context: ActionContext<UserInputState, any>,
-        payload: {data: string}): Promise<string> {
-            try {
-                console.log('sendDateQuestionToFastAPI()')
-                const { data } = payload
-                const command = 22 // 22 : date question command 
-    
-                const response = await axiosInst.fastapiAxiosInst.post(
-                    '/request-ai-command', { command, "data": data })
-                console.log("날짜받기 응답", response.data)
-                return response.data
-            } catch (error) {
-                console.log('sendDateQuestionToFastAPI() 중 문제 발생:', error)
-                throw error
-            }
+        payload: { data: string }): Promise<string> {
+        try {
+            console.log('sendDateQuestionToFastAPI()')
+            const { data } = payload
+            const command = 22 // 22 : date question command 
+
+            const response = await axiosInst.fastapiAxiosInst.post(
+                '/request-ai-command', { command, "data": data })
+            console.log("날짜받기 응답", response.data)
+            return response.data
+        } catch (error) {
+            console.log('sendDateQuestionToFastAPI() 중 문제 발생:', error)
+            throw error
+        }
     },
     async requestDateAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string> {
         try {
@@ -82,20 +82,20 @@ const actions: UserInputActions = {
     },
     async requestLocationQuestionToFastAPI(
         context: ActionContext<UserInputState, any>,
-        payload: {data: string}): Promise<string> {
-            try {
-                console.log('sendLocationQuestionToFastAPI()')
-                const { data } = payload
-                const command = 23 // 23 : location question command 
-    
-                const response = await axiosInst.fastapiAxiosInst.post(
-                    '/request-ai-command', { command, "data": data })
-                console.log("장소받기 응답", response.data)
-                return response.data
-            } catch (error) {
-                console.log('sendLocationQuestionToFastAPI() 중 문제 발생:', error)
-                throw error
-            }
+        payload: { data: string }): Promise<string> {
+        try {
+            console.log('sendLocationQuestionToFastAPI()')
+            const { data } = payload
+            const command = 23 // 23 : location question command 
+
+            const response = await axiosInst.fastapiAxiosInst.post(
+                '/request-ai-command', { command, "data": data })
+            console.log("장소받기 응답", response.data)
+            return response.data
+        } catch (error) {
+            console.log('sendLocationQuestionToFastAPI() 중 문제 발생:', error)
+            throw error
+        }
     },
 
     async requestLocationAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string> {
