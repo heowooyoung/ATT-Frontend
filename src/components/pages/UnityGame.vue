@@ -71,7 +71,7 @@ export default {
               this.sendDateQnAToChatBot(question)
             }
             // 장소 정보가 메세지에 들어있다면, 질문을 던짐
-            if (this.chatBotOutput.toString().trim().includes("어디")) {
+            if (this.chatBotOutput.toString().trim().includes("어디") | this.chatBotOutput.toString().trim().includes("에서")) {
               const question = this.chatHistory
               this.sendLocationQnAToChatBot(question)
             }
