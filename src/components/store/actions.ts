@@ -16,6 +16,10 @@ export type UserInputActions = {
         context: ActionContext<UserInputState, any>,
         payload: { data: string }): Promise<string>
     requestLocationAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
+    requestMenuQuestionToFastAPI(
+        context: ActionContext<UserInputState, any>,
+        payload: { data: string }): Promise<string>
+    requestMenuAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string>
 }
 
 const actions: UserInputActions = {
@@ -109,7 +113,36 @@ const actions: UserInputActions = {
             console.log('requestLocationAnswerToFastAPI() 중 문제 발생:', error)
             throw error
         }
-    }
+    },
+    async requestMenuQuestionToFastAPI(
+        context: ActionContext<UserInputState, any>,
+        payload: { data: string }): Promise<string> {
+        try {
+            console.log('sendMenuQuestionToFastAPI()')
+            const { data } = payload
+            const command = 24 // 24 : location question command 
+
+            const response = await axiosInst.fastapiAxiosInst.post(
+                '/request-ai-command', { command, "data": data })
+            console.log("메뉴받기 응답", response.data)
+            return response.data
+        } catch (error) {
+            console.log('sendMenuQuestionToFastAPI() 중 문제 발생:', error)
+            throw error
+        }
+    },
+    async requestMenuAnswerToFastAPI(context: ActionContext<UserInputState, any>): Promise<string> {
+        try {
+            console.log('requestMenuAnswerToFastAPI()')
+            const response = await axiosInst.fastapiAxiosInst.post(
+                '/menu-qna-result')
+            console.log('Menu Answer: ', response.data)
+            return response.data
+        } catch (error) {
+            console.log('requestMenuAnswerToFastAPI() 중 문제 발생:', error)
+            throw error
+        }
+    },
 }
 
 export default actions
