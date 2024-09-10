@@ -3,45 +3,17 @@
     <h1>회원 정보 관리</h1>
     <v-row>
       <v-col cols="12" md="3">
-        <v-select
-          v-model="selectedGender"
-          :items="genderOptions"
-          label="성별"
-          dense
-          outlined
-        ></v-select>
+        <v-select v-model="selectedGender" :items="genderOptions" label="성별" dense outlined></v-select>
       </v-col>
       <v-col cols="12" md="3">
-        <v-select
-          v-model="selectedLoginType"
-          :items="loginTypeOptions"
-          label="로그인 타입"
-          dense
-          outlined
-        ></v-select>
+        <v-select v-model="selectedLoginType" :items="loginTypeOptions" label="로그인 타입" dense outlined></v-select>
       </v-col>
       <v-col cols="12" md="6">
-        <v-text-field
-          v-model="searchQuery"
-          label="검색어를 입력하세요"
-          append-icon="mdi-magnify"
-          dense
-          outlined
-        ></v-text-field>
+        <v-text-field v-model="searchQuery" label="검색어를 입력하세요" append-icon="mdi-magnify" dense outlined></v-text-field>
       </v-col>
     </v-row>
 
-    <v-data-table
-      :headers="headers"
-      :items="filteredUsers"
-      :items-per-page="itemsPerPage"
-      v-model:page="page"
-      :footer-props="{
-        itemsPerPageOptions: [5, 10, 20],
-      }"
-      item-key="no"
-      class="elevation-1"
-    >
+    <v-data-table :headers="headers" :items="filteredUsers" :items-per-page="itemsPerPage" v-model:page="page" :footer-props="{itemsPerPageOptions: [5, 10, 20],}" item-key="id" class="elevation-1">
       <template #top>
         <v-toolbar flat>
           <v-toolbar-title>회원 목록</v-toolbar-title>
@@ -53,7 +25,7 @@
 
       <template #item="{ item }">
         <tr>
-          <td>{{ item.no }}</td>
+          <td>{{ item.id }}</td> 
           <td>{{ item.email }}</td>
           <td>{{ item.nickname }}</td>
           <td>{{ item.name }}</td>
@@ -64,21 +36,22 @@
       </template>
     </v-data-table>
 
-    <v-pagination
-      v-model="page"
-      :length="pageCount"
-      :total-visible="7"
-      class="my-4"
-    ></v-pagination>
+    <v-pagination v-model="page" :length="pageCount" :total-visible="7" class="my-4"></v-pagination>
+    <h1>모델 피드백 하기</h1>
+    <v-btn color="primary" @click="ModelFeedback">모델 피드백 하는 버튼</v-btn>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { User } from '@/account/store/states'; 
+
+const router = useRouter();
 
 const headers = ref([
-  { text: 'No', value: 'no' },
+  { text: 'No', value: 'id' },
   { text: '이메일', value: 'email' },
   { text: '닉네임', value: 'nickname' },
   { text: '이름', value: 'name' },
@@ -87,7 +60,7 @@ const headers = ref([
   { text: '로그인 타입', value: 'loginType' },
 ]);
 
-const users = ref([]);
+const users = ref<User[]>([]);
 const searchQuery = ref('');
 const selectedGender = ref('');
 const selectedLoginType = ref('');
@@ -99,11 +72,21 @@ const loginTypeOptions = ref(['전체', 'Google', 'Kakao', 'Naver']);
 
 const fetchUsers = async () => {
   try {
-    const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/api/users/`);
-    users.value = response.data.users || [];  // 데이터가 없을 경우 빈 배열로 처리
+    const token = localStorage.getItem('access');
+    const response = await axios.get(`${process.env.VUE_APP_BASE_URL}/api/users/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    users.value = response.data || [];
   } catch (error) {
     console.error('Failed to fetch users:', error);
-    users.value = [];  // 오류가 발생한 경우 빈 배열로 설정
+    if (error.response && error.response.status === 401) {
+      alert('인증이 필요합니다. 로그인 페이지로 이동합니다.');
+      router.push('/account/login');
+    } else {
+      users.value = [];
+    }
   }
 };
 
@@ -133,6 +116,10 @@ const filteredUsers = computed(() => {
 const pageCount = computed(() => {
   return Math.ceil(users.value.length / itemsPerPage.value);
 });
+
+const ModelFeedback = () => {
+  alert("서비스 준비중입니다.");
+};
 
 onMounted(() => {
   fetchUsers();
