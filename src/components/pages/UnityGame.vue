@@ -78,7 +78,7 @@ export default {
               const question = this.chatHistory
               this.sendLocationQnAToChatBot(question)
             }
-            if ((this.chatBotOutput.toString().trim().includes("먹") || this.chatBotOutput.toString().trim().includes("좋")) 
+            if ((this.chatBotOutput.toString().trim().includes("먹")) 
             && this.sceneNumber==1) {
               const question = this.chatHistory
               this.sendMenuQnAToChatBot(question)
