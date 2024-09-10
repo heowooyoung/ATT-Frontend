@@ -90,7 +90,7 @@ export default {
           }
         } catch (error) {
           console.error("응답을 기다리는 중 오류가 발생했습니다:", error);
-          // 오류가 발생해도 무조건 다시 시도하도록 설정
+          // 오류가 발생해도 무조건 다시 시도하도록 설정p
         }
         // 비동기 함수 호출 사이에 지연 시간을 두어 서버에 과부하를 줄 수 있는 빠른 루프 방지
         await new Promise(resolve => setTimeout(resolve, 2000)); // 1초 대기
@@ -148,7 +148,7 @@ export default {
     // 메뉴 QnA
     async sendMenuQnAToChatBot(question) {
       this.menuQuestion = [question]
-      await this.requestMenuQuestionToFastAPI({ "data": this.menuQuestion});
+      await this.requestMenuQuestionToFastAPI({"data": this.menuQuestion});
       let response = null;
       
       while (!response) {
@@ -233,7 +233,7 @@ export default {
     {
       if (this.unityInstance)
       {
-        this.unityInstance.SendMessage('GameManager', 'PlaceEvent', menu);
+        this.unityInstance.SendMessage('GameManager', 'FoodMenuEvent', menu);
         console.log("this.menu", menu);
       }
     },
