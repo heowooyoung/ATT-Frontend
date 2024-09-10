@@ -74,7 +74,7 @@ export default {
               this.sendDateQnAToChatBot(question)
             }
             // 장소 정보가 메세지에 들어있다면, 질문을 던짐
-            if (this.chatBotOutput.toString().trim().includes("어디") || this.chatBotOutput.toString().trim().includes("에서")) {
+            if (this.chatBotOutput.toString().trim().includes("어디") || this.chatBotOutput.toString().trim().includes("근처")) {
               const question = this.chatHistory
               this.sendLocationQnAToChatBot(question)
             }
@@ -201,7 +201,7 @@ export default {
           }
           else if (this.sceneNumber === "1") {  // SceneNumber가 1일 때: 메시지를 통째로 전송
             message.forEach((sentence, index) => {
-              this.chatBotMessage += sentence;
+              this.chatBotMessage += sentence + " ";
             });
             this.unityInstance.SendMessage('GameManager', 'VueEvent', this.chatBotMessage);
             this.chatBotMessage = "";
