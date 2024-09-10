@@ -21,6 +21,8 @@ export default {
       dateQuestion: '',
       location: '',
       locationQuestion: '',
+      menu: '',
+      menuQuestion: '',
       unityInstance: null,
       chatHistory: [],
       messageList: [],
@@ -30,7 +32,8 @@ export default {
   methods: {
     // Chatbot Part
     ...mapActions(userInputModule, ['sendMessageToFastAPI','requestAnswerToFastAPI','requestDateQuestionToFastAPI',
-      'requestDateAnswerToFastAPI','requestLocationQuestionToFastAPI','requestLocationAnswerToFastAPI'
+      'requestDateAnswerToFastAPI','requestLocationQuestionToFastAPI','requestLocationAnswerToFastAPI',
+      'requestMenuQuestionToFastAPI','requestMenuAnswerToFastAPI'
     ]),
 
     // 무조건 일대일 대응 채팅
@@ -62,7 +65,7 @@ export default {
             // 응답이 성공적이라면 response에 결과 저장
             response = potentialResponse;
             this.chatBotOutput = response.generatedText; // 챗봇 응답 저장
-            console.log('ENFP 응답: ', this.chatBotOutput);
+            console.log('상대방 응답: ', this.chatBotOutput);
             this.chatHistory.push({ role: 'assistant', content: this.chatBotOutput[0] }); // gpt 형식에 맞게 변경
            
             // 요일 정보가 메세지에 들어있다면, 질문을 던짐
@@ -71,9 +74,14 @@ export default {
               this.sendDateQnAToChatBot(question)
             }
             // 장소 정보가 메세지에 들어있다면, 질문을 던짐
-            if (this.chatBotOutput.toString().trim().includes("어디") || this.chatBotOutput.toString().trim().includes("에서")) {
+            if (this.chatBotOutput.toString().trim().includes("어디") || this.chatBotOutput.toString().trim().includes("근처")) {
               const question = this.chatHistory
               this.sendLocationQnAToChatBot(question)
+            }
+            if ((this.chatBotOutput.toString().trim().includes("먹")) 
+            && this.sceneNumber==1) {
+              const question = this.chatHistory
+              this.sendMenuQnAToChatBot(question)
             }
             this.sendMessageToUnity(this.chatBotOutput);  // 챗봇 응답 Unity 화면에 출력
             this.chatBotOutput = ''; // 응답 저장소 초기화
@@ -82,7 +90,7 @@ export default {
           }
         } catch (error) {
           console.error("응답을 기다리는 중 오류가 발생했습니다:", error);
-          // 오류가 발생해도 무조건 다시 시도하도록 설정
+          // 오류가 발생해도 무조건 다시 시도하도록 설정p
         }
         // 비동기 함수 호출 사이에 지연 시간을 두어 서버에 과부하를 줄 수 있는 빠른 루프 방지
         await new Promise(resolve => setTimeout(resolve, 2000)); // 1초 대기
@@ -90,9 +98,7 @@ export default {
     },
     // 날짜 QnA
     async sendDateQnAToChatBot(question) {
-      console.log('요일', question)
       this.dateQuestion = [question]
-      console.log('dateQuestion', this.dateQuestion)
       await this.requestDateQuestionToFastAPI({ "data": this.dateQuestion});
       let response = null;
       
@@ -103,8 +109,6 @@ export default {
           if (DateResponse && DateResponse.generatedText) {
             response = DateResponse;
             this.date = response.generatedText; // 챗봇 응답 저장
-            console.log('약속 날짜: ', this.date);
-            console.log('value', this.date[0])
             this.sendMeetingDateToUnity(this.date[0]);
             this.date = ''; // 응답 저장소 초기화
           } else {
@@ -118,7 +122,6 @@ export default {
     },
     // 장소 QnA
     async sendLocationQnAToChatBot(question) {
-      console.log('장소', question)
       this.locationQuestion = [question]
       await this.requestLocationQuestionToFastAPI({ "data": this.locationQuestion});
       let response = null;
@@ -130,10 +133,33 @@ export default {
           if (LocationResponse && LocationResponse.generatedText) {
             response = LocationResponse;
             this.location = response.generatedText; // 챗봇 응답 저장
-            console.log('약속 장소: ', this.location);
-            console.log('value', this.location[0])
             this.sendMeetingLocationToUnity(this.location[0]);
             this.location = ''; // 응답 저장소 초기화
+            this.chatHistory = [] // 채팅 내역 초기화
+          } else {
+            console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
+          }
+        } catch (error) {
+          console.error("답변을 기다리는 중 오류가 발생했습니다:", error);
+        }
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2초 대기
+      }
+    },
+    // 메뉴 QnA
+    async sendMenuQnAToChatBot(question) {
+      this.menuQuestion = [question]
+      await this.requestMenuQuestionToFastAPI({"data": this.menuQuestion});
+      let response = null;
+      
+      while (!response) {
+        try {
+          const MenuResponse = await this.requestMenuAnswerToFastAPI();
+          
+          if (MenuResponse && MenuResponse.generatedText) {
+            response = MenuResponse;
+            this.menu = response.generatedText; // 챗봇 응답 저장
+            this.sendMenuToUnity(this.menu[0]);
+            this.menu = ''; // 응답 저장소 초기화
           } else {
             console.log('답변이 아직 준비되지 않았습니다, 다시 시도합니다...');
           }
@@ -175,7 +201,7 @@ export default {
           }
           else if (this.sceneNumber === "1") {  // SceneNumber가 1일 때: 메시지를 통째로 전송
             message.forEach((sentence, index) => {
-              this.chatBotMessage += sentence;
+              this.chatBotMessage += sentence + " ";
             });
             this.unityInstance.SendMessage('GameManager', 'VueEvent', this.chatBotMessage);
             this.chatBotMessage = "";
@@ -201,6 +227,14 @@ export default {
       {
         this.unityInstance.SendMessage('GameManager', 'PlaceEvent', place);
         console.log("this.place", place);
+      }
+    },
+    sendMenuToUnity(menu)  // 메뉴 데이터 전송
+    {
+      if (this.unityInstance)
+      {
+        this.unityInstance.SendMessage('GameManager', 'FoodMenuEvent', menu);
+        console.log("this.menu", menu);
       }
     },
     resizeUnityCanvas() {
